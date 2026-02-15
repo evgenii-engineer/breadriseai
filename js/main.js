@@ -1,7 +1,7 @@
 
 const LINKS = [
-  {title:"LET'S WORK",href:"https://ig.me/m/breadrise_ai",external:true},
-  {title:"PORTFOLIO",href:"./pages/portfolio.html"}
+  {title:"LET'S WORK",href:"./lets-work/"},
+  {title:"PORTFOLIO",href:"./portfolio/"}
 ];
 
 const root = document.getElementById("buttons");
