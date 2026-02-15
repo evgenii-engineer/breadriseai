@@ -1,9 +1,6 @@
 
 const LINKS = [
-  {title:"HIGH-END AI CAMPAIGNS",subtitle:"COURSE",href:"./pages/course.html"},
-  {title:"E-commerce Product Shots",subtitle:"BOOK",href:"./pages/ecommerce.html"},
-  {title:"Creative Campaign Images",subtitle:"BOOK",href:"./pages/creative.html"},
-  {title:"LET'S WORK",href:"./pages/lets-work.html"},
+  {title:"LET'S WORK",href:"https://ig.me/m/breadrise_ai",external:true},
   {title:"PORTFOLIO",href:"./pages/portfolio.html"}
 ];
 
@@ -12,6 +9,10 @@ LINKS.forEach(l=>{
   const a=document.createElement("a");
   a.className="bigBtn";
   a.href=l.href;
+  if(l.external){
+    a.target="_blank";
+    a.rel="noopener noreferrer";
+  }
   a.innerHTML=`
     <div class="thumb"></div>
     <div class="btnText">
