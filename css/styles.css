@@ -230,10 +230,10 @@ body::before{
 .whyGirls{
   position:absolute;
   left:50%;
-  top:280px;
+  top:300px;
   bottom:auto;
   transform:translateX(-50%);
-  width:min(72%,560px);
+  width:min(76%,620px);
   display:flex;
   justify-content:space-between;
   align-items:flex-end;
@@ -241,15 +241,15 @@ body::before{
 }
 
 .whyGirls img{
-  width:49%;
+  width:50%;
   height:auto;
   image-rendering:pixelated;
-  transform:scaleX(1.1);
+  transform:scaleX(1.16);
   transform-origin:bottom center;
 }
 
 .whyCard{
-  margin:500px auto 0;
+  margin:360px auto 0;
   width:min(82%,700px);
   border-radius:24px;
   background:rgba(84,84,84,.8);
@@ -283,7 +283,7 @@ body::before{
   .whyBread{top:102px;width:min(56%,380px)}
   .whyBreadLeft{left:-24px}
   .whyBreadRight{right:-24px}
-  .whyGirls{width:min(78%,560px);top:270px}
+  .whyGirls{width:min(82%,620px);top:290px}
   .whyCard{width:min(86%,680px)}
   .whyCard{font-size:clamp(13.5px,1.9vw,16px)}
 }
@@ -312,11 +312,11 @@ body::before{
   .whyBread{top:102px;width:58%}
   .whyBreadLeft{left:-44px}
   .whyBreadRight{right:-44px}
-  .whyGirls{width:84%;top:220px}
-  .whyGirls img{width:50%;transform:scaleX(1.12)}
+  .whyGirls{width:90%;top:230px}
+  .whyGirls img{width:50%;transform:scaleX(1.16)}
   .whyCard{
     width:88%;
-    margin-top:390px;
+    margin-top:272px;
     border-radius:20px;
     padding:16px 14px;
     font-size:clamp(12.8px,4.15vw,16px);
