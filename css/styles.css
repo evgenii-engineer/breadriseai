@@ -1,9 +1,7 @@
 :root{
-  --bg-0:#545a54;
-  --bg-1:#626862;
   --text:#f2f2f2;
-  --glass:rgba(255,255,255,.34);
-  --glass-stroke:rgba(255,255,255,.45);
+  --glass:rgba(255,255,255,.38);
+  --glass-stroke:rgba(255,255,255,.5);
   --maxw:760px;
 }
 
@@ -14,34 +12,19 @@ body{
   min-height:100vh;
   color:var(--text);
   font-family:"Rajdhani",system-ui,sans-serif;
-  background:
-    radial-gradient(1100px 680px at 76% 76%, rgba(21,24,25,.42), transparent 64%),
-    radial-gradient(850px 500px at 14% 8%, rgba(255,255,255,.18), transparent 64%),
-    linear-gradient(160deg, var(--bg-0) 0%, var(--bg-1) 48%, #434844 100%);
+  background:#5a615a url("../assets/img/background.png") center top/cover no-repeat fixed;
   position:relative;
   overflow-x:hidden;
-}
-
-body::before{
-  content:"";
-  position:fixed;
-  inset:-8%;
-  pointer-events:none;
-  opacity:.42;
-  background:
-    repeating-linear-gradient(113deg, rgba(255,255,255,.24) 0 3px, rgba(255,255,255,0) 3px 28px),
-    repeating-linear-gradient(69deg, rgba(255,255,255,.15) 0 2px, rgba(255,255,255,0) 2px 20px);
-  transform:rotate(-3deg) scale(1.18);
 }
 
 .wrap{
   width:min(100%,var(--maxw));
   min-height:100vh;
   margin:0 auto;
-  padding:34px 26px 28px;
+  padding:26px 26px 22px;
   display:flex;
   flex-direction:column;
-  gap:16px;
+  gap:14px;
   position:relative;
   z-index:1;
 }
@@ -52,7 +35,7 @@ body::before{
   margin:0;
   letter-spacing:.02em;
   line-height:.88;
-  font-size:clamp(72px, 16vw, 168px);
+  font-size:clamp(92px, 18vw, 190px);
   font-family:"Bebas Neue","Rajdhani",sans-serif;
   font-weight:400;
   text-transform:uppercase;
@@ -61,9 +44,9 @@ body::before{
 }
 
 .subtitle{
-  margin:10px 0 12px;
-  font-size:clamp(30px,2.2vw,44px);
-  line-height:.98;
+  margin:6px 0 10px;
+  font-size:clamp(27px,2.2vw,40px);
+  line-height:1;
   letter-spacing:.02em;
   font-family:"Rajdhani",sans-serif;
   font-weight:500;
@@ -74,13 +57,13 @@ body::before{
 .buttons{
   display:flex;
   flex-direction:column;
-  gap:16px;
-  margin-top:10px;
+  gap:18px;
+  margin-top:12px;
 }
 
 .bigBtn{
-  min-height:74px;
-  border-radius:18px;
+  min-height:84px;
+  border-radius:20px;
   display:flex;
   align-items:center;
   justify-content:center;
@@ -101,7 +84,7 @@ body::before{
   font-family:"Bebas Neue","Rajdhani",sans-serif;
   text-transform:uppercase;
   letter-spacing:.02em;
-  font-size:clamp(34px,5vw,62px);
+  font-size:clamp(44px,6.4vw,74px);
   color:#f3f3f3;
   text-align:center;
   line-height:.92;
@@ -111,41 +94,38 @@ body::before{
   position:absolute;
   pointer-events:none;
   user-select:none;
-  filter:drop-shadow(0 12px 10px rgba(0,0,0,.22));
-  font-size:clamp(120px,17vw,220px);
+  filter:drop-shadow(0 12px 12px rgba(0,0,0,.26));
   image-rendering:pixelated;
-  opacity:.96;
+  opacity:1;
+  width:clamp(230px,36vw,390px);
+  height:auto;
 }
 
-.bread-left{left:-26px;bottom:28px;transform:rotate(30deg)}
-.bread-center{left:38%;bottom:172px;transform:rotate(-16deg);font-size:clamp(96px,12vw,150px)}
-.bread-right{right:-18px;bottom:30px;transform:rotate(18deg)}
+.bread-left{left:-58px;bottom:12px;transform:rotate(30deg)}
+.bread-center{left:38%;bottom:226px;transform:rotate(-20deg);width:clamp(180px,25vw,250px)}
+.bread-right{right:-56px;bottom:22px;transform:rotate(17deg)}
 
 .social{
   margin-top:auto;
-  padding:178px 0 10px;
+  padding:208px 0 4px;
   display:flex;
   justify-content:center;
-  gap:18px;
+  gap:16px;
 }
 
 .icon{
-  width:56px;
-  height:56px;
-  border-radius:999px;
+  width:50px;
+  height:50px;
   display:inline-flex;
   align-items:center;
   justify-content:center;
   color:#fff;
   text-decoration:none;
-  border:2px solid rgba(255,255,255,.8);
-  background:rgba(255,255,255,.12);
-  backdrop-filter:blur(2px);
 }
 
 .icon svg{
-  width:30px;
-  height:30px;
+  width:34px;
+  height:34px;
   fill:currentColor;
 }
 
@@ -158,15 +138,18 @@ body::before{
 .page a{color:#fff}
 
 @media (max-width:700px){
-  .wrap{padding:26px 16px 22px}
-  .subtitle{font-size:clamp(24px,8vw,34px)}
+  body{background-attachment:scroll}
+  .wrap{padding:26px 16px 18px}
+  .title{font-size:clamp(88px,22vw,142px)}
+  .subtitle{font-size:clamp(24px,7.3vw,34px)}
   .buttons{margin-top:12px;gap:14px}
-  .bigBtn{min-height:68px;border-radius:16px}
-  .btnTitle{font-size:clamp(28px,9vw,44px)}
-  .social{padding-top:160px}
-  .icon{width:52px;height:52px}
-  .icon svg{width:28px;height:28px}
-  .bread-left{left:-44px;bottom:8px}
-  .bread-right{right:-34px;bottom:12px}
-  .bread-center{left:34%;bottom:160px}
+  .bigBtn{min-height:70px;border-radius:16px}
+  .btnTitle{font-size:clamp(34px,9.1vw,46px)}
+  .social{padding-top:170px;padding-bottom:8px}
+  .icon{width:46px;height:46px}
+  .icon svg{width:32px;height:32px}
+  .bread{width:clamp(190px,43vw,280px)}
+  .bread-left{left:-72px;bottom:46px}
+  .bread-right{right:-66px;bottom:48px}
+  .bread-center{left:34%;bottom:220px;width:clamp(150px,24vw,190px)}
 }
