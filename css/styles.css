@@ -60,10 +60,10 @@ body::before{
 .subtitle{
   margin:8px 0 0;
   font-size:clamp(29px,2.9vw,41px);
-  line-height:.95;
-  letter-spacing:.01em;
-  font-family:"Rajdhani",sans-serif;
-  font-weight:500;
+  line-height:1.02;
+  letter-spacing:0;
+  font-family:"Pixelify Sans","Rajdhani",sans-serif;
+  font-weight:400;
   color:#f5f5f5;
   text-shadow:0 1px 3px rgba(0,0,0,.16);
 }
@@ -186,6 +186,7 @@ body::before{
   text-decoration:none;
   display:inline-block;
   font-size:18px;
+  font-family:"Pixelify Sans","Rajdhani",sans-serif;
   margin:0 0 6px 2px;
 }
 
@@ -253,6 +254,7 @@ body::before{
   font-size:clamp(13.5px,1.65vw,17px);
   line-height:1.52;
   letter-spacing:.005em;
+  font-family:"Pixelify Sans","Rajdhani",sans-serif;
   color:#efefef;
 }
 
@@ -286,7 +288,7 @@ body::before{
 @media (max-width:700px){
   .wrap{padding:34px 14px 18px}
   .title{font-size:clamp(88px,24vw,122px)}
-  .subtitle{font-size:clamp(19px,5.9vw,28px);line-height:.98}
+  .subtitle{font-size:clamp(17px,5.5vw,26px);line-height:1.04}
   .buttons{margin-top:28px;gap:14px}
   .hero{width:min(96%,500px)}
   .buttons{width:min(96%,500px)}
