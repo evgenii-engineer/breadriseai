@@ -154,6 +154,96 @@ body::before{
 
 .page a{color:#fff}
 
+.whyPage{
+  margin:0;
+  min-height:100dvh;
+  font-family:"Rajdhani",system-ui,sans-serif;
+  color:#f3f3f3;
+  background:#666;
+  position:relative;
+}
+
+.whyPage::before{
+  content:"";
+  position:fixed;
+  inset:-2vh -2vw;
+  background:url("../assets/img/background.png") center top/cover no-repeat;
+  transform:scale(1.03);
+  z-index:-1;
+}
+
+.whyWrap{
+  width:min(100%,760px);
+  margin:0 auto;
+  padding:14px 10px 24px;
+}
+
+.whyBack{
+  color:rgba(255,255,255,.9);
+  text-decoration:none;
+  display:inline-block;
+  font-size:18px;
+  margin:0 0 6px 2px;
+}
+
+.whyHero{
+  position:relative;
+  min-height:390px;
+}
+
+.whyTitle{
+  margin:0;
+  text-align:center;
+  font-family:"Bebas Neue","Rajdhani",sans-serif;
+  letter-spacing:.01em;
+  line-height:.9;
+  font-size:clamp(56px,14vw,136px);
+  color:#f7f7f7;
+}
+
+.whyBread{
+  position:absolute;
+  left:50%;
+  top:84px;
+  transform:translateX(-50%) rotate(-2deg);
+  width:min(98%,730px);
+  image-rendering:pixelated;
+  opacity:.95;
+  pointer-events:none;
+}
+
+.whyGirls{
+  position:absolute;
+  left:50%;
+  bottom:0;
+  transform:translateX(-50%);
+  width:min(84%,540px);
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-end;
+}
+
+.whyGirls img{
+  width:47%;
+  height:auto;
+  image-rendering:pixelated;
+}
+
+.whyCard{
+  margin:10px auto 0;
+  width:min(92%,700px);
+  border-radius:24px;
+  background:rgba(88,88,88,.79);
+  padding:20px 16px;
+  font-size:clamp(14px,3.5vw,34px);
+  line-height:1.37;
+  letter-spacing:.005em;
+  color:#efefef;
+}
+
+.whyCard p{margin:0 0 9px}
+.whyCard p:last-child{margin-bottom:0}
+
 @media (max-width:1000px){
   .wrap{padding:36px 20px 18px}
   .title{font-size:clamp(96px,16vw,138px)}
@@ -166,6 +256,12 @@ body::before{
   .bread-left{left:-72px;bottom:6px}
   .bread-right{right:-74px;bottom:8px}
   .bread-center{left:38%;bottom:160px;width:clamp(124px,18vw,185px)}
+
+  .whyWrap{padding:12px 10px 20px}
+  .whyHero{min-height:364px}
+  .whyTitle{font-size:clamp(56px,14vw,110px)}
+  .whyBread{top:84px;width:min(108%,730px)}
+  .whyGirls{width:min(88%,520px)}
 }
 
 @media (max-width:700px){
@@ -184,4 +280,21 @@ body::before{
   .bread-left{left:-106px;bottom:44px}
   .bread-right{right:-108px;bottom:46px}
   .bread-center{left:34%;bottom:188px;width:clamp(150px,33vw,220px)}
+
+  .whyWrap{padding:8px 8px 20px}
+  .whyBack{font-size:16px}
+  .whyHero{min-height:316px}
+  .whyTitle{font-size:clamp(52px,16.2vw,94px)}
+  .whyBread{top:82px;width:128%;max-width:none}
+  .whyGirls{width:95%;bottom:-2px}
+  .whyGirls img{width:49%}
+  .whyCard{
+    width:96%;
+    margin-top:8px;
+    border-radius:20px;
+    padding:16px 12px;
+    font-size:clamp(13.6px,4.5vw,19px);
+    line-height:1.36;
+  }
+  .whyCard p{margin-bottom:8px}
 }
