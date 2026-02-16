@@ -29,7 +29,12 @@ body{
   z-index:1;
 }
 
-.hero{padding-top:0}
+.hero{
+  padding-top:0;
+  width:min(86%,560px);
+  margin:0 auto;
+  text-align:left;
+}
 
 .title{
   margin:0;
@@ -59,11 +64,13 @@ body{
   flex-direction:column;
   gap:18px;
   margin-top:clamp(22px,4vh,42px);
-  align-items:center;
+  width:min(86%,560px);
+  margin-left:auto;
+  margin-right:auto;
 }
 
 .bigBtn{
-  width:min(86%,560px);
+  width:100%;
   min-height:78px;
   border-radius:19px;
   display:flex;
@@ -142,7 +149,8 @@ body{
   .wrap{padding:36px 20px 18px}
   .title{font-size:clamp(96px,16vw,138px)}
   .subtitle{font-size:clamp(22px,3.7vw,34px)}
-  .bigBtn{width:min(90%,540px)}
+  .hero{width:min(90%,540px)}
+  .buttons{width:min(90%,540px)}
   .btnTitle{font-size:clamp(44px,7vw,56px)}
   .social{padding-top:clamp(145px,20vh,210px);gap:16px}
   .bread{width:clamp(170px,30vw,260px)}
@@ -156,7 +164,9 @@ body{
   .title{font-size:clamp(88px,24vw,122px)}
   .subtitle{font-size:clamp(19px,5.9vw,28px);line-height:.98}
   .buttons{margin-top:28px;gap:14px}
-  .bigBtn{width:min(96%,500px);min-height:64px;border-radius:15px}
+  .hero{width:min(96%,500px)}
+  .buttons{width:min(96%,500px)}
+  .bigBtn{min-height:64px;border-radius:15px}
   .btnTitle{font-size:clamp(34px,9vw,46px)}
   .social{padding-top:clamp(160px,24vh,210px);padding-bottom:8px;gap:14px}
   .icon{width:46px;height:46px}
