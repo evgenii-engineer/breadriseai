@@ -12,9 +12,18 @@ body{
   min-height:100dvh;
   color:var(--text);
   font-family:"Rajdhani",system-ui,sans-serif;
-  background:#5a615a url("../assets/img/background.png") center top/cover no-repeat;
+  background:#5a615a;
   position:relative;
   overflow-x:hidden;
+}
+
+body::before{
+  content:"";
+  position:fixed;
+  inset:-2vh -2vw;
+  background:url("../assets/img/background.png") center top/cover no-repeat;
+  transform:scale(1.03);
+  z-index:-1;
 }
 
 .wrap{
@@ -160,11 +169,6 @@ body{
 }
 
 @media (max-width:700px){
-  body{
-    background-size:100% auto;
-    background-repeat:repeat-y;
-    background-position:center top;
-  }
   .wrap{padding:34px 14px 18px}
   .title{font-size:clamp(88px,24vw,122px)}
   .subtitle{font-size:clamp(19px,5.9vw,28px);line-height:.98}
