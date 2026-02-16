@@ -33,7 +33,7 @@ body{
   padding-top:0;
   width:min(86%,560px);
   margin:0 auto;
-  text-align:left;
+  text-align:center;
 }
 
 .title{
@@ -171,8 +171,8 @@ body{
   .social{padding-top:clamp(160px,24vh,210px);padding-bottom:8px;gap:14px}
   .icon{width:46px;height:46px}
   .icon svg{width:34px;height:34px}
-  .bread{width:clamp(125px,38vw,190px)}
-  .bread-left{left:-66px;bottom:34px}
-  .bread-right{right:-68px;bottom:36px}
-  .bread-center{left:36%;bottom:176px;width:clamp(96px,20vw,140px)}
+  .bread{width:clamp(170px,48vw,260px)}
+  .bread-left{left:-86px;bottom:28px}
+  .bread-right{right:-90px;bottom:30px}
+  .bread-center{left:34%;bottom:186px;width:clamp(124px,27vw,190px)}
 }
