@@ -9,7 +9,7 @@
 
 body{
   margin:0;
-  min-height:100vh;
+  min-height:100dvh;
   color:var(--text);
   font-family:"Rajdhani",system-ui,sans-serif;
   background:#5a615a url("../assets/img/background.png") center top/cover no-repeat;
@@ -19,7 +19,7 @@ body{
 
 .wrap{
   width:min(100%,var(--maxw));
-  min-height:100vh;
+  min-height:100dvh;
   margin:0 auto;
   padding:38px 24px 28px;
   display:flex;
@@ -58,12 +58,12 @@ body{
   display:flex;
   flex-direction:column;
   gap:18px;
-  margin-top:56px;
+  margin-top:clamp(22px,4vh,42px);
   align-items:center;
 }
 
 .bigBtn{
-  width:86%;
+  width:min(86%,560px);
   min-height:78px;
   border-radius:19px;
   display:flex;
@@ -102,13 +102,13 @@ body{
   height:auto;
 }
 
-.bread-left{left:-72px;bottom:18px;transform:rotate(30deg)}
-.bread-center{left:39%;bottom:242px;transform:rotate(-18deg);width:clamp(150px,22vw,220px)}
-.bread-right{right:-74px;bottom:20px;transform:rotate(16deg)}
+.bread-left{left:-72px;bottom:-24px;transform:rotate(30deg)}
+.bread-center{left:39%;bottom:136px;transform:rotate(-18deg);width:clamp(150px,22vw,220px)}
+.bread-right{right:-74px;bottom:-18px;transform:rotate(16deg)}
 
 .social{
   margin-top:auto;
-  padding:238px 0 6px;
+  padding:clamp(130px,18vh,190px) 0 6px;
   display:flex;
   justify-content:center;
   gap:20px;
@@ -138,18 +138,31 @@ body{
 
 .page a{color:#fff}
 
+@media (max-width:1000px){
+  .wrap{padding:36px 20px 18px}
+  .title{font-size:clamp(96px,16vw,138px)}
+  .subtitle{font-size:clamp(22px,3.7vw,34px)}
+  .bigBtn{width:min(90%,540px)}
+  .btnTitle{font-size:clamp(44px,7vw,56px)}
+  .social{padding-top:clamp(145px,20vh,210px);gap:16px}
+  .bread{width:clamp(170px,30vw,260px)}
+  .bread-left{left:-72px;bottom:6px}
+  .bread-right{right:-74px;bottom:8px}
+  .bread-center{left:38%;bottom:160px;width:clamp(124px,18vw,185px)}
+}
+
 @media (max-width:700px){
-  .wrap{padding:42px 18px 20px}
-  .title{font-size:clamp(98px,27vw,138px)}
-  .subtitle{font-size:clamp(18px,6vw,32px)}
-  .buttons{margin-top:44px;gap:16px}
-  .bigBtn{width:90%;min-height:66px;border-radius:16px}
-  .btnTitle{font-size:clamp(40px,9.5vw,54px)}
-  .social{padding-top:196px;padding-bottom:8px;gap:14px}
+  .wrap{padding:34px 14px 18px}
+  .title{font-size:clamp(88px,24vw,122px)}
+  .subtitle{font-size:clamp(19px,5.9vw,28px);line-height:.98}
+  .buttons{margin-top:28px;gap:14px}
+  .bigBtn{width:min(96%,500px);min-height:64px;border-radius:15px}
+  .btnTitle{font-size:clamp(34px,9vw,46px)}
+  .social{padding-top:clamp(160px,24vh,210px);padding-bottom:8px;gap:14px}
   .icon{width:46px;height:46px}
   .icon svg{width:34px;height:34px}
-  .bread{width:clamp(140px,45vw,230px)}
-  .bread-left{left:-74px;bottom:68px}
-  .bread-right{right:-76px;bottom:70px}
-  .bread-center{left:36%;bottom:212px;width:clamp(104px,24vw,170px)}
+  .bread{width:clamp(125px,38vw,190px)}
+  .bread-left{left:-66px;bottom:34px}
+  .bread-right{right:-68px;bottom:36px}
+  .bread-center{left:36%;bottom:176px;width:clamp(96px,20vw,140px)}
 }

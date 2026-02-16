@@ -1,5 +1,5 @@
 const LINKS = [
-  {title:"WHO THE FUCK IS BREAD RISE?",href:"./who-is-bread-rise/"},
+  {title:"WHO IS BREAD RISE?",href:"./who-is-bread-rise/"},
   {title:"PORTFOLIO",href:"./portfolio/"},
   {title:"WORK W/ BREAD RISE",href:"./lets-work/"},
   {title:"STUDY W/ BREAD RISE",href:"./study/"}
