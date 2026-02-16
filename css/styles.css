@@ -160,6 +160,11 @@ body{
 }
 
 @media (max-width:700px){
+  body{
+    background-size:100% auto;
+    background-repeat:repeat-y;
+    background-position:center top;
+  }
   .wrap{padding:34px 14px 18px}
   .title{font-size:clamp(88px,24vw,122px)}
   .subtitle{font-size:clamp(19px,5.9vw,28px);line-height:.98}
@@ -168,11 +173,11 @@ body{
   .buttons{width:min(96%,500px)}
   .bigBtn{min-height:64px;border-radius:15px}
   .btnTitle{font-size:clamp(34px,9vw,46px)}
-  .social{padding-top:clamp(160px,24vh,210px);padding-bottom:8px;gap:14px}
+  .social{padding-top:clamp(138px,20vh,180px);padding-bottom:10px;gap:14px}
   .icon{width:46px;height:46px}
   .icon svg{width:34px;height:34px}
-  .bread{width:clamp(170px,48vw,260px)}
-  .bread-left{left:-86px;bottom:28px}
-  .bread-right{right:-90px;bottom:30px}
-  .bread-center{left:34%;bottom:186px;width:clamp(124px,27vw,190px)}
+  .bread{width:clamp(195px,56vw,310px)}
+  .bread-left{left:-106px;bottom:44px}
+  .bread-right{right:-108px;bottom:46px}
+  .bread-center{left:34%;bottom:188px;width:clamp(150px,33vw,220px)}
 }
