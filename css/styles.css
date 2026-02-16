@@ -308,16 +308,16 @@ body::before{
 
   .whyWrap{padding:8px 8px 20px}
   .whyBack{font-size:16px}
-  .whyHero{min-height:500px}
+  .whyHero{min-height:460px}
   .whyTitle{font-size:clamp(66px,16vw,92px)}
-  .whyBread{top:58px;width:70%}
+  .whyBread{top:56px;width:68%}
   .whyBreadLeft{left:-62px}
   .whyBreadRight{right:-62px}
-  .whyGirls{width:94%;top:198px;bottom:auto}
-  .whyGirls img{width:50%;transform:scaleX(1.12)}
+  .whyGirls{width:94%;top:auto;bottom:0}
+  .whyGirls img{width:50%;transform:scaleX(1.14)}
   .whyCard{
     width:88%;
-    margin-top:-12px;
+    margin-top:-2px;
     border-radius:20px;
     padding:16px 14px;
     font-size:clamp(12.8px,4.15vw,16px);
