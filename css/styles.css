@@ -29,11 +29,7 @@ body::before{
   content:"";
   position:fixed;
   inset:-2vh -2vw;
-  background:url("../assets/img/background.png") center top/cover no-repeat;
-  background-image:image-set(
-    url("../assets/img/background.webp") type("image/webp"),
-    url("../assets/img/background.png") type("image/png")
-  );
+  background:url("../assets/img/background.webp") center top/cover no-repeat;
   transform:scale(1.03);
   z-index:-1;
 }
@@ -182,11 +178,7 @@ body::before{
   content:"";
   position:fixed;
   inset:-2vh -2vw;
-  background:url("../assets/img/background.png") center top/cover no-repeat;
-  background-image:image-set(
-    url("../assets/img/background.webp") type("image/webp"),
-    url("../assets/img/background.png") type("image/png")
-  );
+  background:url("../assets/img/background.webp") center top/cover no-repeat;
   transform:scale(1.03);
   z-index:-1;
 }
@@ -208,7 +200,8 @@ body::before{
 
 .whyHero{
   position:relative;
-  min-height:640px;
+  min-height:620px;
+  overflow:hidden;
 }
 
 .whyTitle{
@@ -225,8 +218,8 @@ body::before{
 
 .whyBread{
   position:absolute;
-  top:108px;
-  width:min(56%,420px);
+  top:122px;
+  width:min(43%,330px);
   image-rendering:pixelated;
   opacity:.95;
   pointer-events:none;
@@ -234,13 +227,13 @@ body::before{
 }
 
 .whyBreadLeft{
-  left:-20px;
-  transform:rotate(29deg);
+  left:12%;
+  transform:rotate(30deg);
 }
 
 .whyBreadRight{
-  right:-20px;
-  transform:rotate(-28deg) scaleX(-1);
+  right:12%;
+  transform:rotate(-30deg) scaleX(-1);
 }
 
 .whyGirls{
@@ -249,7 +242,7 @@ body::before{
   top:auto;
   bottom:0;
   transform:translateX(-50%);
-  width:min(76%,620px);
+  width:min(64%,500px);
   display:flex;
   justify-content:space-between;
   align-items:flex-end;
@@ -257,15 +250,15 @@ body::before{
 }
 
 .whyGirls img{
-  width:50%;
+  width:48%;
   height:auto;
   image-rendering:pixelated;
-  transform:scaleX(1.16);
+  transform:scaleX(1.08);
   transform-origin:bottom center;
 }
 
 .whyCard{
-  margin:-2px auto 0;
+  margin:12px auto 0;
   width:min(82%,700px);
   border-radius:24px;
   background:rgba(84,84,84,.8);
@@ -275,6 +268,8 @@ body::before{
   letter-spacing:.005em;
   font-family:"Pixelify Sans","Rajdhani",sans-serif;
   color:#efefef;
+  position:relative;
+  z-index:4;
 }
 
 .whyCard p{margin:0 0 12px}
@@ -294,14 +289,14 @@ body::before{
   .bread-center{left:38%;bottom:160px;width:clamp(124px,18vw,185px)}
 
   .whyWrap{padding:12px 10px 20px}
-  .whyHero{min-height:590px}
+  .whyHero{min-height:560px}
   .whyTitle{font-size:clamp(70px,10vw,112px)}
-  .whyBread{top:102px;width:min(56%,380px)}
-  .whyBreadLeft{left:-24px}
-  .whyBreadRight{right:-24px}
-  .whyGirls{width:min(82%,620px);bottom:0}
+  .whyBread{top:104px;width:min(45%,300px)}
+  .whyBreadLeft{left:10%}
+  .whyBreadRight{right:10%}
+  .whyGirls{width:min(66%,460px);bottom:0}
   .whyCard{width:min(86%,680px)}
-  .whyCard{margin-top:-2px}
+  .whyCard{margin-top:10px}
   .whyCard{font-size:clamp(13.5px,1.9vw,16px)}
 }
 
@@ -324,16 +319,16 @@ body::before{
 
   .whyWrap{padding:8px 8px 20px}
   .whyBack{font-size:16px}
-  .whyHero{min-height:460px}
-  .whyTitle{font-size:clamp(66px,16vw,92px)}
-  .whyBread{top:56px;width:68%}
-  .whyBreadLeft{left:-62px}
-  .whyBreadRight{right:-62px}
-  .whyGirls{width:94%;top:auto;bottom:0}
-  .whyGirls img{width:50%;transform:scaleX(1.14)}
+  .whyHero{min-height:500px}
+  .whyTitle{font-size:clamp(66px,16vw,96px)}
+  .whyBread{top:74px;width:58%}
+  .whyBreadLeft{left:-18%}
+  .whyBreadRight{right:-18%}
+  .whyGirls{width:74%;top:auto;bottom:0}
+  .whyGirls img{width:48%;transform:scaleX(1.02)}
   .whyCard{
     width:88%;
-    margin-top:-2px;
+    margin-top:10px;
     border-radius:20px;
     padding:16px 14px;
     font-size:clamp(12.8px,4.15vw,16px);
