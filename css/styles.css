@@ -201,7 +201,7 @@ body::before{
 .whyHero{
   position:relative;
   min-height:620px;
-  overflow:hidden;
+  overflow:visible;
 }
 
 .whyTitle{
@@ -319,16 +319,16 @@ body::before{
 
   .whyWrap{padding:8px 8px 20px}
   .whyBack{font-size:16px}
-  .whyHero{min-height:620px}
+  .whyHero{min-height:420px}
   .whyTitle{font-size:clamp(66px,16vw,98px)}
-  .whyBread{top:108px;width:82%}
-  .whyBreadLeft{left:-38%;transform:rotate(34deg)}
-  .whyBreadRight{right:-38%;left:auto;transform:rotate(-34deg) scaleX(-1)}
-  .whyGirls{width:74%;top:auto;bottom:0}
+  .whyBread{top:-250px;width:82%}
+  .whyBreadLeft{left:-48%;transform:rotate(-18deg)}
+  .whyBreadRight{top:-314px;right:-46%;left:auto;transform:rotate(18deg) scaleX(-1)}
+  .whyGirls{width:96%;top:auto;bottom:0}
   .whyGirls img{width:48%;transform:scaleX(1.02)}
   .whyCard{
     width:88%;
-    margin-top:10px;
+    margin-top:0;
     border-radius:20px;
     padding:16px 14px;
     font-size:clamp(12.8px,4.15vw,16px);
