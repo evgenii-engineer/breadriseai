@@ -30,6 +30,10 @@ body::before{
   position:fixed;
   inset:-2vh -2vw;
   background:url("../assets/img/background.png") center top/cover no-repeat;
+  background-image:image-set(
+    url("../assets/img/background.webp") type("image/webp"),
+    url("../assets/img/background.png") type("image/png")
+  );
   transform:scale(1.03);
   z-index:-1;
 }
@@ -179,6 +183,10 @@ body::before{
   position:fixed;
   inset:-2vh -2vw;
   background:url("../assets/img/background.png") center top/cover no-repeat;
+  background-image:image-set(
+    url("../assets/img/background.webp") type("image/webp"),
+    url("../assets/img/background.png") type("image/png")
+  );
   transform:scale(1.03);
   z-index:-1;
 }
