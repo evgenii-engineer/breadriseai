@@ -213,13 +213,13 @@ body::before{
   font-size:clamp(72px,9.3vw,138px);
   color:#f7f7f7;
   position:relative;
-  z-index:3;
+  z-index:4;
 }
 
 .whyBread{
   position:absolute;
-  top:122px;
-  width:min(43%,330px);
+  top:162px;
+  width:min(38%,290px);
   image-rendering:pixelated;
   opacity:.95;
   pointer-events:none;
@@ -227,13 +227,13 @@ body::before{
 }
 
 .whyBreadLeft{
-  left:12%;
-  transform:rotate(30deg);
+  left:31%;
+  transform:translateX(-50%) rotate(33deg);
 }
 
 .whyBreadRight{
-  right:12%;
-  transform:rotate(-30deg) scaleX(-1);
+  right:31%;
+  transform:translateX(50%) rotate(-33deg) scaleX(-1);
 }
 
 .whyGirls{
@@ -242,11 +242,11 @@ body::before{
   top:auto;
   bottom:0;
   transform:translateX(-50%);
-  width:min(64%,500px);
+  width:min(66%,520px);
   display:flex;
   justify-content:space-between;
   align-items:flex-end;
-  z-index:2;
+  z-index:3;
 }
 
 .whyGirls img{
@@ -291,10 +291,10 @@ body::before{
   .whyWrap{padding:12px 10px 20px}
   .whyHero{min-height:560px}
   .whyTitle{font-size:clamp(70px,10vw,112px)}
-  .whyBread{top:104px;width:min(45%,300px)}
-  .whyBreadLeft{left:10%}
-  .whyBreadRight{right:10%}
-  .whyGirls{width:min(66%,460px);bottom:0}
+  .whyBread{top:138px;width:min(40%,270px)}
+  .whyBreadLeft{left:30%;transform:translateX(-50%) rotate(33deg)}
+  .whyBreadRight{right:30%;transform:translateX(50%) rotate(-33deg) scaleX(-1)}
+  .whyGirls{width:min(68%,470px);bottom:0}
   .whyCard{width:min(86%,680px)}
   .whyCard{margin-top:10px}
   .whyCard{font-size:clamp(13.5px,1.9vw,16px)}
@@ -321,10 +321,10 @@ body::before{
   .whyBack{font-size:16px}
   .whyHero{min-height:500px}
   .whyTitle{font-size:clamp(66px,16vw,96px)}
-  .whyBread{top:74px;width:58%}
-  .whyBreadLeft{left:-18%}
-  .whyBreadRight{right:-18%}
-  .whyGirls{width:74%;top:auto;bottom:0}
+  .whyBread{top:118px;width:52%}
+  .whyBreadLeft{left:30%;transform:translateX(-50%) rotate(34deg)}
+  .whyBreadRight{right:30%;transform:translateX(50%) rotate(-34deg) scaleX(-1)}
+  .whyGirls{width:76%;top:auto;bottom:0}
   .whyGirls img{width:48%;transform:scaleX(1.02)}
   .whyCard{
     width:88%;
