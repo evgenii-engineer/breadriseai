@@ -319,12 +319,12 @@ body::before{
 
   .whyWrap{padding:8px 8px 20px}
   .whyBack{font-size:16px}
-  .whyHero{min-height:560px}
-  .whyTitle{font-size:clamp(66px,16vw,96px)}
-  .whyBread{top:24px;width:76%}
-  .whyBreadLeft{left:-18%;transform:rotate(31deg)}
-  .whyBreadRight{right:-18%;left:auto;transform:rotate(-31deg) scaleX(-1)}
-  .whyGirls{width:76%;top:auto;bottom:0}
+  .whyHero{min-height:620px}
+  .whyTitle{font-size:clamp(66px,16vw,98px)}
+  .whyBread{top:108px;width:82%}
+  .whyBreadLeft{left:-38%;transform:rotate(34deg)}
+  .whyBreadRight{right:-38%;left:auto;transform:rotate(-34deg) scaleX(-1)}
+  .whyGirls{width:74%;top:auto;bottom:0}
   .whyGirls img{width:48%;transform:scaleX(1.02)}
   .whyCard{
     width:88%;
