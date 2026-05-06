@@ -34,13 +34,23 @@ jobs:
       - name: Install
         run: npm ci
 
-      # When deploying to https://<user>.github.io/<repo>/, the project must
-      # be served from a sub-path. The Configure Pages action exposes that
-      # path; if it's empty (custom domain or user/organization page) the
-      # site is served from the root.
+      # Custom domain (public/CNAME) → site is served from the root, so the
+      # base path must be empty. Otherwise fall back to the value derived by
+      # Configure Pages (e.g. "/<repo>" for project pages on github.io).
+      - name: Resolve base path
+        id: basepath
+        run: |
+          if [ -f public/CNAME ]; then
+            echo "Custom domain detected (public/CNAME) → using empty base path"
+            echo "value=" >> "$GITHUB_OUTPUT"
+          else
+            echo "No CNAME → using base path from Configure Pages: '${{ steps.pages.outputs.base_path }}'"
+            echo "value=${{ steps.pages.outputs.base_path }}" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Build
         env:
-          NEXT_PUBLIC_BASE_PATH: ${{ steps.pages.outputs.base_path }}
+          NEXT_PUBLIC_BASE_PATH: ${{ steps.basepath.outputs.value }}
         run: npm run build
 
       - name: Add .nojekyll
