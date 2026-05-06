@@ -118,21 +118,21 @@ function DetailPanel({
       aria-modal="true"
     >
       {/* top bar */}
-      <div className="container-edge fixed inset-x-0 top-0 z-20 flex items-start justify-between gap-6 bg-gradient-to-b from-paper via-paper/85 to-transparent pt-5 pb-10 md:pt-6">
-        <div>
-          <span className="font-mono text-micro uppercase tracking-[0.22em] text-ink/55">
+      <div className="container-edge fixed inset-x-0 top-0 z-20 flex items-start justify-between gap-3 bg-gradient-to-b from-paper via-paper/85 to-transparent pt-4 pb-8 md:gap-6 md:pt-6 md:pb-10">
+        <div className="min-w-0">
+          <span className="font-mono text-[10px] uppercase tracking-[0.22em] text-ink/55 md:text-micro">
             {project.index} · {project.year}
           </span>
           <motion.h2
-            className="mt-2 leading-[0.92] tracking-tightest"
-            style={{ fontSize: "clamp(1.75rem, 4vw, 3.75rem)" }}
+            className="mt-1.5 truncate leading-[0.95] tracking-tightest md:mt-2"
+            style={{ fontSize: "clamp(1.4rem, 4.2vw, 3.75rem)" }}
             initial={{ y: 24, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
           >
             {project.title}
           </motion.h2>
-          <span className="mt-2 inline-block font-mono text-[10px] uppercase tracking-[0.22em] text-ink/50 md:text-micro">
+          <span className="mt-1.5 inline-block truncate font-mono text-[9px] uppercase tracking-[0.2em] text-ink/50 md:mt-2 md:text-micro">
             {project.discipline.join(" · ")}
           </span>
         </div>
@@ -141,9 +141,10 @@ function DetailPanel({
           onClick={onClose}
           data-cursor="hover"
           aria-label="Close project"
-          className="rounded-full border border-ink/25 px-4 py-2 font-mono text-[10px] uppercase tracking-[0.22em] text-ink transition-colors duration-300 hover:border-ink/85 md:text-micro"
+          className="shrink-0 rounded-full border border-ink/25 px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.22em] text-ink transition-colors duration-300 hover:border-ink/85 md:px-4 md:py-2 md:text-micro"
         >
-          Close ✕
+          <span className="md:hidden">✕</span>
+          <span className="hidden md:inline">Close ✕</span>
         </button>
       </div>
 
@@ -166,8 +167,8 @@ function DetailPanel({
       </div>
 
       {/* counter + cues */}
-      <div className="container-edge pointer-events-none absolute inset-x-0 bottom-5 z-20 flex items-end justify-between gap-6 font-mono text-[10px] uppercase tracking-[0.22em] text-ink/55 md:bottom-7 md:text-micro">
-        <div className="flex items-baseline gap-3">
+      <div className="container-edge pointer-events-none absolute inset-x-0 bottom-3 z-20 flex items-end justify-between gap-3 font-mono text-[10px] uppercase tracking-[0.22em] text-ink/55 md:bottom-7 md:gap-6 md:text-micro">
+        <div className="flex items-baseline gap-2 md:gap-3">
           <span className="text-ink tabular-nums">
             {String(active + 1).padStart(2, "0")}
           </span>
@@ -188,9 +189,9 @@ function DetailPanel({
             data-cursor="hover"
             aria-label="Previous"
             disabled={active === 0}
-            className="rounded-full border border-ink/20 px-3 py-1.5 transition-colors duration-300 hover:border-ink/85 disabled:opacity-30 disabled:hover:border-ink/20"
+            className="rounded-full border border-ink/20 px-2.5 py-1 transition-colors duration-300 hover:border-ink/85 disabled:opacity-30 disabled:hover:border-ink/20 md:px-3 md:py-1.5"
           >
-            ↑ Prev
+            ↑
           </button>
           <button
             type="button"
@@ -200,9 +201,9 @@ function DetailPanel({
             data-cursor="hover"
             aria-label="Next"
             disabled={active === total - 1}
-            className="rounded-full border border-ink/20 px-3 py-1.5 transition-colors duration-300 hover:border-ink/85 disabled:opacity-30 disabled:hover:border-ink/20"
+            className="rounded-full border border-ink/20 px-2.5 py-1 transition-colors duration-300 hover:border-ink/85 disabled:opacity-30 disabled:hover:border-ink/20 md:px-3 md:py-1.5"
           >
-            Next ↓
+            ↓
           </button>
         </div>
       </div>
@@ -264,7 +265,7 @@ function CrateCard({
   void total;
   return (
     <div
-      className="absolute inset-0 flex items-center justify-center px-6 pt-32 pb-20 md:pt-36 md:pb-24"
+      className="absolute inset-0 flex items-center justify-center px-4 pt-28 pb-16 md:px-6 md:pt-36 md:pb-24"
       style={{
         ...crateStyle(offset),
         transition:
@@ -273,13 +274,13 @@ function CrateCard({
         willChange: "transform, opacity",
       }}
     >
-      <div className="relative aspect-[3/4] h-full max-h-[78vh] w-auto overflow-hidden bg-paper-300 shadow-[0_38px_60px_-30px_rgba(20,16,10,0.55)] ring-1 ring-ink/5">
+      <div className="relative aspect-[3/4] h-full max-h-[78vh] w-auto max-w-[88vw] overflow-hidden bg-paper-300 shadow-[0_38px_60px_-30px_rgba(20,16,10,0.55)] ring-1 ring-ink/5">
         <Image
           src={src}
           alt={alt}
           fill
           unoptimized
-          sizes="78vh"
+          sizes="(max-width:768px) 88vw, 78vh"
           className="object-cover"
           priority={isActive}
         />

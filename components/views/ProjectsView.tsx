@@ -40,9 +40,9 @@ export function ProjectsView() {
       </AnimatePresence>
 
       {/* tagline + Overview/Index toggle, anchored bottom */}
-      <div className="container-edge pointer-events-none absolute inset-x-0 bottom-6 z-30 flex items-end justify-between gap-8 md:bottom-10">
+      <div className="container-edge pointer-events-none absolute inset-x-0 bottom-4 z-30 flex flex-col items-stretch gap-3 md:bottom-10 md:flex-row md:items-end md:justify-between md:gap-8">
         <motion.p
-          className="max-w-xs font-mono text-[10px] uppercase tracking-[0.18em] text-ink/60 md:max-w-sm md:text-micro"
+          className="hidden max-w-sm font-mono text-micro uppercase tracking-[0.18em] text-ink/60 md:block"
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1.0, ease: [0.16, 1, 0.3, 1], delay: 0.4 }}
@@ -51,7 +51,7 @@ export function ProjectsView() {
         </motion.p>
 
         <motion.div
-          className="pointer-events-auto flex items-center gap-1 font-mono text-[10px] uppercase tracking-[0.22em] text-ink md:text-micro"
+          className="pointer-events-auto flex items-center justify-end gap-1 font-mono text-[10px] uppercase tracking-[0.22em] text-ink md:text-micro"
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1.0, ease: [0.16, 1, 0.3, 1], delay: 0.5 }}

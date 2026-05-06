@@ -28,18 +28,18 @@ export function Navigation() {
                     onClick={() => setView(tab.id)}
                     data-cursor="hover"
                     className={cn(
-                      "relative rounded-full border px-3 py-2 transition-colors duration-300 md:px-4",
+                      "relative whitespace-nowrap rounded-full border px-2.5 py-1.5 transition-colors duration-300 md:px-4 md:py-2",
                       isActive
                         ? "border-ink/85 text-ink"
                         : "border-ink/15 text-ink/45 hover:border-ink/35 hover:text-ink/75",
                     )}
                   >
                     {isBrandTab ? (
-                      <span className="flex items-baseline gap-2">
+                      <span className="flex items-baseline gap-1.5 md:gap-2">
                         <span>{site.brandMark}</span>
                         <sup className="text-ink/45">®</sup>
-                        <span className="text-ink/45">·</span>
-                        <span>{tab.label}</span>
+                        <span className="hidden text-ink/45 sm:inline">·</span>
+                        <span className="hidden sm:inline">{tab.label}</span>
                       </span>
                     ) : (
                       tab.label

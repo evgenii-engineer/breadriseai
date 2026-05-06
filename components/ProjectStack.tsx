@@ -1,18 +1,41 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import { stackPlates } from "@/lib/projects";
 import { prefersReducedMotion } from "@/lib/utils";
 import { useView } from "@/lib/view-context";
+import { useBreakpoint } from "@/lib/use-breakpoint";
 
 const STACK = stackPlates;
 
-function cardTransform(i: number, n: number) {
+type Geom = {
+  dx: number;
+  dy: number;
+  dz: number;
+  cardW: string;
+  perspective: number;
+  restX: number;
+  restY: number;
+};
+
+// Geometry per breakpoint — the px multipliers ride with screen size
+// so the fan fits without overflowing on phones.
+function geometryFor(bp: "sm" | "md" | "lg"): Geom {
+  if (bp === "sm") {
+    return { dx: 56, dy: 14, dz: 80, cardW: "62vmin", perspective: 1500, restX: -4, restY: -10 };
+  }
+  if (bp === "md") {
+    return { dx: 88, dy: 20, dz: 120, cardW: "44vmin", perspective: 1900, restX: -5, restY: -12 };
+  }
+  return { dx: 120, dy: 26, dz: 150, cardW: "36vmin", perspective: 2200, restX: -6, restY: -14 };
+}
+
+function cardTransform(i: number, n: number, g: Geom) {
   const mid = (n - 1) / 2;
-  const x = (i - mid) * 120;
-  const y = (mid - i) * 26;
-  const z = -i * 150;
+  const x = (i - mid) * g.dx;
+  const y = (mid - i) * g.dy;
+  const z = -i * g.dz;
   return `translate3d(${x}px, ${y}px, ${z}px)`;
 }
 
@@ -21,6 +44,8 @@ export function ProjectStack() {
   const stackRef = useRef<HTMLDivElement>(null);
   const [hovered, setHovered] = useState<number | null>(null);
   const { openProject } = useView();
+  const bp = useBreakpoint();
+  const geom = useMemo(() => geometryFor(bp), [bp]);
 
   useEffect(() => {
     const wrap = wrapperRef.current;
@@ -28,13 +53,11 @@ export function ProjectStack() {
     if (!wrap || !stack) return;
 
     if (prefersReducedMotion()) {
-      stack.style.transform = "rotateX(-6deg) rotateY(-14deg)";
+      stack.style.transform = `rotateX(${geom.restX}deg) rotateY(${geom.restY}deg)`;
       return;
     }
 
-    const REST_X = -6;
-    const REST_Y = -14;
-    const target = { x: REST_X, y: REST_Y };
+    const target = { x: geom.restX, y: geom.restY };
     const current = { x: target.x, y: target.y };
     let raf = 0;
 
@@ -42,15 +65,13 @@ export function ProjectStack() {
       const rect = wrap.getBoundingClientRect();
       const nx = (e.clientX - rect.left) / rect.width - 0.5;
       const ny = (e.clientY - rect.top) / rect.height - 0.5;
-      target.x = REST_X + ny * -10;
-      target.y = REST_Y + nx * 22;
+      target.x = geom.restX + ny * -10;
+      target.y = geom.restY + nx * 22;
     };
-
     const onLeave = () => {
-      target.x = REST_X;
-      target.y = REST_Y;
+      target.x = geom.restX;
+      target.y = geom.restY;
     };
-
     const tick = () => {
       current.x += (target.x - current.x) * 0.06;
       current.y += (target.y - current.y) * 0.06;
@@ -67,18 +88,18 @@ export function ProjectStack() {
       wrap.removeEventListener("pointerleave", onLeave);
       cancelAnimationFrame(raf);
     };
-  }, []);
+  }, [geom]);
 
   return (
     <div
       ref={wrapperRef}
       className="absolute inset-0 grid place-items-center"
-      style={{ perspective: "2200px", perspectiveOrigin: "50% 50%" }}
+      style={{ perspective: `${geom.perspective}px`, perspectiveOrigin: "50% 50%" }}
     >
       <div
         ref={stackRef}
         className="relative h-[60vmin] w-[60vmin] preserve-3d transition-transform duration-[600ms] ease-out-expo will-change-transform"
-        style={{ transform: "rotateX(-6deg) rotateY(-14deg)" }}
+        style={{ transform: `rotateX(${geom.restX}deg) rotateY(${geom.restY}deg)` }}
       >
         {STACK.map((p, i) => {
           const isFocus = hovered === i;
@@ -95,9 +116,10 @@ export function ProjectStack() {
                 setHovered((h) => (h === i ? null : h))
               }
               aria-label={`Open ${p.projectTitle}`}
-              className="group absolute left-1/2 top-1/2 block aspect-[4/3] w-[36vmin] -translate-x-1/2 -translate-y-1/2 transition-[filter,opacity] duration-500 ease-out-expo"
+              className="group absolute left-1/2 top-1/2 block aspect-[4/3] -translate-x-1/2 -translate-y-1/2 transition-[filter,opacity] duration-500 ease-out-expo"
               style={{
-                transform: `${cardTransform(i, STACK.length)} ${drift}`,
+                width: geom.cardW,
+                transform: `${cardTransform(i, STACK.length, geom)} ${drift}`,
                 transformStyle: "preserve-3d",
                 zIndex: isFocus ? 100 : 10 + i,
                 opacity: hovered !== null && !isFocus ? 0.55 : 1,
@@ -116,7 +138,7 @@ export function ProjectStack() {
                   alt={p.projectTitle}
                   fill
                   unoptimized
-                  sizes="(min-width:1024px) 36vmin, 40vmin"
+                  sizes="(max-width:768px) 62vmin, (max-width:1024px) 44vmin, 36vmin"
                   className="object-cover"
                   priority={i < 4}
                 />
