@@ -5,10 +5,11 @@ import { CustomCursor } from "@/components/CustomCursor";
 import { LoadingScreen } from "@/components/LoadingScreen";
 import { Navigation } from "@/components/Navigation";
 import { ViewProvider } from "@/lib/view-context";
+import { PreloadProvider } from "@/lib/preload-context";
 
 export const metadata: Metadata = {
   title: {
-    default: `${site.name} — Cinematic Digital Studio`,
+    default: `${site.name} — AI Production · Creative Direction`,
     template: `%s · ${site.name}`,
   },
   description: site.description,
@@ -44,12 +45,14 @@ export default function RootLayout({
   return (
     <html lang="en" className="bg-paper">
       <body className="bg-paper text-ink antialiased grain">
-        <ViewProvider>
-          <LoadingScreen />
-          <CustomCursor />
-          <Navigation />
-          <main id="main">{children}</main>
-        </ViewProvider>
+        <PreloadProvider>
+          <ViewProvider>
+            <LoadingScreen />
+            <CustomCursor />
+            <Navigation />
+            <main id="main">{children}</main>
+          </ViewProvider>
+        </PreloadProvider>
       </body>
     </html>
   );

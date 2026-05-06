@@ -2,23 +2,16 @@
 
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import { projects } from "@/lib/projects";
+import { stackPlates } from "@/lib/projects";
 import { prefersReducedMotion } from "@/lib/utils";
 
-const STACK = projects.slice(0, 12);
+const STACK = stackPlates;
 
-/**
- * Per-card 3D placement. The stack is a flat plane of plates fanning out
- * diagonally from bottom-left to upper-right, then receding into Z.
- * Centered around (0,0) so the whole formation sits at the centre of
- * the wrapper. The wrapper applies a global rotation that tracks the
- * cursor with damping.
- */
 function cardTransform(i: number, n: number) {
   const mid = (n - 1) / 2;
-  const x = (i - mid) * 120;        // fan horizontally, centered
-  const y = (mid - i) * 26;         // bottom-left → top-right
-  const z = -i * 150;               // recede front-to-back
+  const x = (i - mid) * 120;
+  const y = (mid - i) * 26;
+  const z = -i * 150;
   return `translate3d(${x}px, ${y}px, ${z}px)`;
 }
 
@@ -90,8 +83,8 @@ export function ProjectStack() {
           const drift = isFocus ? "translateZ(80px)" : "";
           return (
             <a
-              key={p.id}
-              href={`#${p.id}`}
+              key={p.key}
+              href={`#${p.projectId}`}
               data-cursor="view"
               data-cursor-label="View"
               onPointerEnter={() => setHovered(i)}
@@ -115,11 +108,11 @@ export function ProjectStack() {
                 }}
               >
                 <Image
-                  src={p.cover}
-                  alt={`${p.client} — ${p.title}`}
+                  src={p.src}
+                  alt={p.projectTitle}
                   fill
                   unoptimized
-                  sizes="(min-width:1024px) 28vmin, 32vmin"
+                  sizes="(min-width:1024px) 36vmin, 40vmin"
                   className="object-cover"
                   priority={i < 4}
                 />
@@ -128,7 +121,7 @@ export function ProjectStack() {
                   className="pointer-events-none absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-paper/15"
                 />
                 <span className="pointer-events-none absolute left-3 top-3 font-mono text-[9px] uppercase tracking-[0.2em] text-paper/95 opacity-0 transition-opacity duration-500 group-hover:opacity-100">
-                  {p.index} · {p.client}
+                  {p.projectIndex} · {p.projectTitle}
                 </span>
               </div>
             </a>

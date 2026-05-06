@@ -2,6 +2,7 @@
 
 import { AnimatePresence, motion } from "framer-motion";
 import { useView } from "@/lib/view-context";
+import { usePreload } from "@/lib/preload-context";
 import { ProjectsView } from "@/components/views/ProjectsView";
 import { ResearchView } from "@/components/views/ResearchView";
 import { StudioView } from "@/components/views/StudioView";
@@ -15,9 +16,14 @@ const variants = {
 
 export function AppShell() {
   const { view } = useView();
+  const { ready } = usePreload();
 
   return (
-    <div className="relative h-[100svh] min-h-[640px] w-full overflow-hidden">
+    <div
+      className="relative h-[100svh] min-h-[640px] w-full overflow-hidden transition-opacity duration-700 ease-out"
+      style={{ opacity: ready ? 1 : 0, pointerEvents: ready ? "auto" : "none" }}
+      aria-hidden={!ready}
+    >
       <AnimatePresence mode="wait">
         <motion.div
           key={view}

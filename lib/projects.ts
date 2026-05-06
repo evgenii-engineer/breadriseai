@@ -1,127 +1,156 @@
 /**
- * Project / case study list.
- * The first ~12 entries become plates in the 3D parallax stack on the home page.
+ * Bread Rise — case studies.
+ * Files live in /public/media/<slug>/. The asset() helper in lib/utils
+ * prepends the GitHub Pages basePath at runtime, so reference them as
+ * "/media/<slug>/<file>" here.
  *
- * Drop your own files into `public/media/` and reference as `/media/foo.jpg`.
+ * To add a new project: drop the images into /public/media/<slug>/,
+ * append an entry below, and the site picks it up — the 3D stack, the
+ * Index list and the Research grid all read from this file.
  */
+
+import { asset } from "@/lib/utils";
 
 export type Project = {
   id: string;
   index: string;
-  client: string;
   title: string;
-  discipline: string[];
+  client?: string;
   year: number;
-  cover: string;
+  discipline: string[];
+  /** First image is also used as the cover/headline plate. */
+  gallery: string[];
 };
+
+const m = (slug: string, file: string) => asset(`/media/${slug}/${file}`);
 
 export const projects: Project[] = [
   {
-    id: "neon-archive",
+    id: "women-are-beautiful",
     index: "01",
-    client: "Maison Aurelle",
-    title: "A season of soft brutalism",
-    discipline: ["Art Direction", "Web", "Film"],
+    title: "Women are beautiful",
     year: 2025,
-    cover: "https://images.unsplash.com/photo-1512446816042-444d641267d4?auto=format&fit=crop&w=1200&q=80",
+    discipline: ["Direction", "AI Production", "Editorial"],
+    gallery: [
+      m("women-are-beautiful", "IMG_3393.webp"),
+      m("women-are-beautiful", "IMG_3392.webp"),
+      m("women-are-beautiful", "IMG_3390.webp"),
+      m("women-are-beautiful", "IMG_3388.webp"),
+      m("women-are-beautiful", "IMG_3387.webp"),
+      m("women-are-beautiful", "IMG_3385.jpg"),
+      m("women-are-beautiful", "IMG_3384.webp"),
+      m("women-are-beautiful", "IMG_3383.webp"),
+      m("women-are-beautiful", "IMG_3382.webp"),
+    ],
   },
   {
-    id: "atlas",
+    id: "runway-training",
     index: "02",
-    client: "Atlas Editions",
-    title: "Editorial in motion",
-    discipline: ["Identity", "Interaction"],
+    title: "Runway training",
     year: 2025,
-    cover: "https://images.unsplash.com/photo-1558865869-c93f6f8482af?auto=format&fit=crop&w=1200&q=80",
+    discipline: ["Direction", "Motion", "Fashion"],
+    gallery: [
+      m("runway-training", "IMG_4065.webp"),
+      m("runway-training", "IMG_4072.webp"),
+      m("runway-training", "IMG_4073.webp"),
+      m("runway-training", "IMG_4082.webp"),
+      m("runway-training", "IMG_4122.jpg"),
+      m("runway-training", "IMG_4131.webp"),
+      m("runway-training", "IMG_4132.webp"),
+      m("runway-training", "IMG_4134.webp"),
+      m("runway-training", "IMG_4138.webp"),
+      m("runway-training", "IMG_4160.webp"),
+      m("runway-training", "IMG_4161.webp"),
+      m("runway-training", "IMG_4162.webp"),
+      m("runway-training", "IMG_4163.webp"),
+    ],
   },
   {
-    id: "nocturne",
+    id: "wet",
     index: "03",
-    client: "Nocturne Records",
-    title: "An ambient catalog of nights",
-    discipline: ["Brand", "Sound", "Spatial"],
+    title: "Wet",
     year: 2024,
-    cover: "https://images.unsplash.com/photo-1518972559570-7cc1309f3229?auto=format&fit=crop&w=1200&q=80",
+    discipline: ["AI Production", "Visual Identity"],
+    gallery: [
+      m("wet", "IMG_3948.webp"),
+      m("wet", "IMG_3958.webp"),
+      m("wet", "IMG_3960.webp"),
+      m("wet", "IMG_3962.webp"),
+      m("wet", "IMG_3964.webp"),
+      m("wet", "IMG_3965.webp"),
+      m("wet", "IMG_3966.webp"),
+    ],
   },
   {
-    id: "orbit",
+    id: "man-accessories",
     index: "04",
-    client: "Orbit Coffee",
-    title: "Mornings, designed",
-    discipline: ["Identity", "Packaging", "Web"],
+    title: "Man accessories",
     year: 2024,
-    cover: "https://images.unsplash.com/photo-1517816743773-6e0fd518b4a6?auto=format&fit=crop&w=1200&q=80",
-  },
-  {
-    id: "bleu-courant",
-    index: "05",
-    client: "Bleu Courant",
-    title: "An ocean told in pixels",
-    discipline: ["Web", "Film", "Sound"],
-    year: 2024,
-    cover: "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1200&q=80",
-  },
-  {
-    id: "studio-twelve",
-    index: "06",
-    client: "Studio Twelve",
-    title: "A monograph in motion",
-    discipline: ["Editorial", "Interaction"],
-    year: 2023,
-    cover: "https://images.unsplash.com/photo-1504198266287-1659872e6590?auto=format&fit=crop&w=1200&q=80",
-  },
-  {
-    id: "vermeer-reverie",
-    index: "07",
-    client: "Vermeer Reverie",
-    title: "Light, slowly",
-    discipline: ["Film", "Spatial"],
-    year: 2023,
-    cover: "https://images.unsplash.com/photo-1502691876148-a84978e59af8?auto=format&fit=crop&w=1200&q=80",
-  },
-  {
-    id: "kiln",
-    index: "08",
-    client: "Kiln Ceramics",
-    title: "Hands and earth",
-    discipline: ["Brand", "Web"],
-    year: 2023,
-    cover: "https://images.unsplash.com/photo-1582719471384-894fbb16e074?auto=format&fit=crop&w=1200&q=80",
-  },
-  {
-    id: "voltaire",
-    index: "09",
-    client: "Maison Voltaire",
-    title: "An archive in glass",
-    discipline: ["Editorial", "Identity"],
-    year: 2022,
-    cover: "https://images.unsplash.com/photo-1495556650867-99590cea3657?auto=format&fit=crop&w=1200&q=80",
-  },
-  {
-    id: "sable",
-    index: "10",
-    client: "Sable",
-    title: "A garment, breathing",
-    discipline: ["Direction", "Film"],
-    year: 2022,
-    cover: "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&w=1200&q=80",
-  },
-  {
-    id: "iris",
-    index: "11",
-    client: "Iris Botanique",
-    title: "A field guide to red",
-    discipline: ["Brand", "Editorial"],
-    year: 2022,
-    cover: "https://images.unsplash.com/photo-1487530811176-3780de880c2d?auto=format&fit=crop&w=1200&q=80",
-  },
-  {
-    id: "ferment",
-    index: "12",
-    client: "Ferment Studio",
-    title: "Living surfaces",
-    discipline: ["Spatial", "Web"],
-    year: 2022,
-    cover: "https://images.unsplash.com/photo-1469474968028-56623f02e42e?auto=format&fit=crop&w=1200&q=80",
+    discipline: ["Direction", "Editorial", "AI Production"],
+    gallery: [
+      m("man-accessories", "IMG_2966.webp"),
+      m("man-accessories", "IMG_2980.webp"),
+      m("man-accessories", "IMG_2985.jpg"),
+      m("man-accessories", "IMG_2988.jpg"),
+      m("man-accessories", "IMG_2996.webp"),
+      m("man-accessories", "IMG_2997.webp"),
+    ],
   },
 ];
+
+/** Cover (first) image of every project. */
+export const covers = projects.map((p) => ({
+  id: p.id,
+  index: p.index,
+  title: p.title,
+  year: p.year,
+  src: p.gallery[0],
+}));
+
+/**
+ * Flat list of every image in every project, tagged with its parent
+ * project. Used by the 3D stack and the Research grid so the visuals
+ * have variety even when the project count is small.
+ */
+export type Plate = {
+  key: string;
+  src: string;
+  projectId: string;
+  projectTitle: string;
+  projectIndex: string;
+};
+
+export const plates: Plate[] = projects.flatMap((p) =>
+  p.gallery.map((src, i) => ({
+    key: `${p.id}-${i}`,
+    src,
+    projectId: p.id,
+    projectTitle: p.title,
+    projectIndex: p.index,
+  })),
+);
+
+/**
+ * 12 plates for the hero stack — distributed across all projects so
+ * every project shows up.
+ */
+export const stackPlates: Plate[] = (() => {
+  const out: Plate[] = [];
+  let i = 0;
+  while (out.length < 12 && i < 50) {
+    for (const p of projects) {
+      const img = p.gallery[i];
+      if (!img) continue;
+      out.push({
+        key: `${p.id}-stack-${i}`,
+        src: img,
+        projectId: p.id,
+        projectTitle: p.title,
+        projectIndex: p.index,
+      });
+      if (out.length >= 12) break;
+    }
+    i += 1;
+  }
+  return out;
+})();

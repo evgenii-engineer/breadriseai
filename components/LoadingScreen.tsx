@@ -3,41 +3,51 @@
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { site } from "@/lib/site";
-
-const TICKS = 56;
+import { usePreload } from "@/lib/preload-context";
 
 export function LoadingScreen() {
-  const [progress, setProgress] = useState(0);
-  const [done, setDone] = useState(false);
+  const { progress, ready } = usePreload();
+  const [hidden, setHidden] = useState(false);
+  const [displayed, setDisplayed] = useState(0);
 
+  // Lock scroll while the gate is up.
   useEffect(() => {
-    document.body.style.overflow = "hidden";
-    let frame = 0;
+    if (hidden) {
+      document.body.style.overflow = "";
+    } else {
+      document.body.style.overflow = "hidden";
+    }
+    return () => { document.body.style.overflow = ""; };
+  }, [hidden]);
+
+  // Smooth-fill the progress so the bar never jumps backwards or jitters.
+  useEffect(() => {
     let raf = 0;
     const tick = () => {
-      frame += 1;
-      const next = Math.min(100, Math.round((1 - Math.pow(1 - frame / TICKS, 2.4)) * 100));
-      setProgress(next);
-      if (next >= 100) {
-        setTimeout(() => setDone(true), 280);
-        return;
-      }
+      setDisplayed((d) => {
+        const target = ready ? 1 : Math.min(progress, 0.99);
+        const next = d + (target - d) * 0.12;
+        return Math.abs(target - next) < 0.001 ? target : next;
+      });
       raf = requestAnimationFrame(tick);
     };
     raf = requestAnimationFrame(tick);
-    return () => {
-      cancelAnimationFrame(raf);
-      document.body.style.overflow = "";
-    };
-  }, []);
+    return () => cancelAnimationFrame(raf);
+  }, [progress, ready]);
 
+  // Hide once the bar reaches 100 visually.
   useEffect(() => {
-    if (done) document.body.style.overflow = "";
-  }, [done]);
+    if (ready && displayed >= 0.999) {
+      const t = setTimeout(() => setHidden(true), 280);
+      return () => clearTimeout(t);
+    }
+  }, [ready, displayed]);
+
+  const pct = Math.round(displayed * 100);
 
   return (
     <AnimatePresence>
-      {!done && (
+      {!hidden && (
         <motion.div
           key="loader"
           className="fixed inset-0 z-[100] flex flex-col items-stretch justify-between bg-paper text-ink"
@@ -47,11 +57,14 @@ export function LoadingScreen() {
         >
           <div className="container-edge flex items-start justify-between pt-6 md:pt-7">
             <span className="label">{site.shortName}</span>
-            <span className="label">/ Index 2026</span>
+            <span className="label">/ Loading</span>
           </div>
-          <div className="container-edge flex items-end justify-between pb-10">
-            <div className="font-display leading-none tracking-tightest"
-                 style={{ fontSize: "clamp(3rem, 10vw, 12rem)" }}>
+
+          <div className="container-edge flex items-end justify-between gap-6 pb-12">
+            <div
+              className="font-display leading-none tracking-tightest"
+              style={{ fontSize: "clamp(3rem, 10vw, 12rem)" }}
+            >
               <span className="block overflow-hidden">
                 <motion.span
                   className="block"
@@ -73,16 +86,19 @@ export function LoadingScreen() {
                 </motion.span>
               </span>
             </div>
-            <div className="font-mono text-micro tabular-nums text-ink/65">
-              {String(progress).padStart(3, "0")} / 100
+            <div className="text-right font-mono text-micro tabular-nums text-ink/65">
+              <div>{String(pct).padStart(3, "0")} / 100</div>
+              <div className="mt-1 text-ink/35">Preloading assets</div>
             </div>
           </div>
+
           <div className="absolute inset-x-0 bottom-0 h-px bg-ink/15">
-            <motion.div
+            <div
               className="h-full bg-ink"
-              initial={{ width: 0 }}
-              animate={{ width: `${progress}%` }}
-              transition={{ ease: "linear" }}
+              style={{
+                width: `${pct}%`,
+                transition: "width 80ms linear",
+              }}
             />
           </div>
         </motion.div>
