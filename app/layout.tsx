@@ -1,11 +1,10 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import { site } from "@/lib/site";
-import { SmoothScroll } from "@/components/SmoothScroll";
 import { CustomCursor } from "@/components/CustomCursor";
 import { LoadingScreen } from "@/components/LoadingScreen";
 import { Navigation } from "@/components/Navigation";
-import { ScrollIndicator } from "@/components/ScrollIndicator";
+import { ViewProvider } from "@/lib/view-context";
 
 export const metadata: Metadata = {
   title: {
@@ -45,13 +44,12 @@ export default function RootLayout({
   return (
     <html lang="en" className="bg-paper">
       <body className="bg-paper text-ink antialiased grain">
-        <SmoothScroll>
+        <ViewProvider>
           <LoadingScreen />
           <CustomCursor />
           <Navigation />
-          <ScrollIndicator />
           <main id="main">{children}</main>
-        </SmoothScroll>
+        </ViewProvider>
       </body>
     </html>
   );
