@@ -6,6 +6,7 @@ import { usePreload } from "@/lib/preload-context";
 import { ProjectsView } from "@/components/views/ProjectsView";
 import { ReferencesView } from "@/components/views/ReferencesView";
 import { ContactView } from "@/components/views/ContactView";
+import { ProjectDetail } from "@/components/ProjectDetail";
 
 const variants = {
   initial: { opacity: 0 },
@@ -38,6 +39,8 @@ export function AppShell() {
           {view === "contact" && <ContactView />}
         </motion.div>
       </AnimatePresence>
+
+      <ProjectDetail />
     </div>
   );
 }

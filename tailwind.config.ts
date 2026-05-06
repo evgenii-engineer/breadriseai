@@ -38,14 +38,14 @@ const config: Config = {
         mono: ["var(--font-mono)", "ui-monospace", "monospace"],
       },
       fontSize: {
-        "mega-1": ["clamp(4rem, 14vw, 18rem)", { lineHeight: "0.86", letterSpacing: "-0.04em" }],
-        "mega-2": ["clamp(3rem, 10vw, 12rem)", { lineHeight: "0.9", letterSpacing: "-0.035em" }],
-        "huge": ["clamp(2.25rem, 6vw, 6rem)", { lineHeight: "0.95", letterSpacing: "-0.025em" }],
+        "mega-1": ["clamp(4rem, 14vw, 18rem)", { lineHeight: "0.88", letterSpacing: "-0.05em" }],
+        "mega-2": ["clamp(3rem, 10vw, 12rem)", { lineHeight: "0.92", letterSpacing: "-0.04em" }],
+        "huge": ["clamp(2.25rem, 6vw, 6rem)", { lineHeight: "0.96", letterSpacing: "-0.03em" }],
         "lede": ["clamp(1.05rem, 1.4vw, 1.35rem)", { lineHeight: "1.4", letterSpacing: "-0.005em" }],
         "micro": ["0.7rem", { lineHeight: "1.2", letterSpacing: "0.16em" }],
       },
       letterSpacing: {
-        tightest: "-0.05em",
+        tightest: "-0.045em",
       },
       transitionTimingFunction: {
         "out-expo": "cubic-bezier(0.16, 1, 0.3, 1)",

@@ -4,9 +4,9 @@
 
 @layer base {
   :root {
-    --font-display: "Times New Roman", "Times", serif;
-    --font-sans: "Inter", "Helvetica Neue", system-ui, sans-serif;
-    --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", monospace;
+    --font-display: "Helvetica Neue", "Helvetica", "Arial", system-ui, sans-serif;
+    --font-sans: "Helvetica Neue", "Helvetica", "Arial", system-ui, sans-serif;
+    --font-mono: "Helvetica Neue", "Helvetica", "Arial", system-ui, sans-serif;
 
     --bg: #f1ece4;
     --fg: #0e0d0b;
@@ -52,7 +52,6 @@
     background: var(--bg);
     color: var(--fg);
     min-height: 100dvh;
-    font-feature-settings: "ss01", "ss02", "cv01", "cv11";
   }
 
   ::selection {

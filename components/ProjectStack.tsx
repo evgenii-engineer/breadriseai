@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { stackPlates } from "@/lib/projects";
 import { prefersReducedMotion } from "@/lib/utils";
+import { useView } from "@/lib/view-context";
 
 const STACK = stackPlates;
 
@@ -19,6 +20,7 @@ export function ProjectStack() {
   const wrapperRef = useRef<HTMLDivElement>(null);
   const stackRef = useRef<HTMLDivElement>(null);
   const [hovered, setHovered] = useState<number | null>(null);
+  const { openProject } = useView();
 
   useEffect(() => {
     const wrap = wrapperRef.current;
@@ -82,15 +84,17 @@ export function ProjectStack() {
           const isFocus = hovered === i;
           const drift = isFocus ? "translateZ(80px)" : "";
           return (
-            <a
+            <button
               key={p.key}
-              href={`#${p.projectId}`}
+              type="button"
+              onClick={() => openProject(p.projectId)}
               data-cursor="view"
               data-cursor-label="View"
               onPointerEnter={() => setHovered(i)}
               onPointerLeave={() =>
                 setHovered((h) => (h === i ? null : h))
               }
+              aria-label={`Open ${p.projectTitle}`}
               className="group absolute left-1/2 top-1/2 block aspect-[4/3] w-[36vmin] -translate-x-1/2 -translate-y-1/2 transition-[filter,opacity] duration-500 ease-out-expo"
               style={{
                 transform: `${cardTransform(i, STACK.length)} ${drift}`,
@@ -124,7 +128,7 @@ export function ProjectStack() {
                   {p.projectIndex} · {p.projectTitle}
                 </span>
               </div>
-            </a>
+            </button>
           );
         })}
       </div>
