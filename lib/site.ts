@@ -1,6 +1,5 @@
 /**
- * Single source of truth for site metadata, copy, and content.
- * Edit this file to change headlines, project list, and other text.
+ * Single source of truth for site metadata, copy, and links.
  */
 
 export const site = {
@@ -9,22 +8,19 @@ export const site = {
   brandMark: "Bread Rise",
   domain: "breadriseai.com",
   description:
-    "An independent studio building cinematic, mouse-driven digital experiences for fashion, culture and forward-thinking brands.",
-  email: "studio@breadriseai.com",
-  location: "Paris · Lisbon · Remote",
-  availability: "Booking projects · Q3 2026",
+    "Cinematic moments, made with AI. Direction, editorial and visual identity for fashion, culture and forward-thinking brands.",
+  location: "Lisbon",
   social: [
-    { label: "Instagram", href: "https://instagram.com/breadrise_ai" },
-    { label: "Are.na", href: "https://are.na/" },
-    { label: "Vimeo", href: "https://vimeo.com/" },
+    { label: "Instagram", href: "https://www.instagram.com/breadrise_ai" },
     { label: "TikTok", href: "https://www.tiktok.com/@breadrise_ai" },
+    { label: "Pinterest", href: "https://pt.pinterest.com/hlebniikovva/" },
   ],
-  navigation: [
-    { label: "Projects", href: "#projects" },
-    { label: "Research", href: "#research" },
-    { label: "Studio", href: "#studio" },
-    { label: "Contact", href: "#contact" },
-  ],
+  /** Primary social used as the contact action. */
+  contact: {
+    label: "Instagram",
+    handle: "@breadrise_ai",
+    href: "https://www.instagram.com/breadrise_ai",
+  },
 } as const;
 
 export type Site = typeof site;

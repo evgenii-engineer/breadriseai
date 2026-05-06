@@ -3,10 +3,6 @@
  * Files live in /public/media/<slug>/. The asset() helper in lib/utils
  * prepends the GitHub Pages basePath at runtime, so reference them as
  * "/media/<slug>/<file>" here.
- *
- * To add a new project: drop the images into /public/media/<slug>/,
- * append an entry below, and the site picks it up — the 3D stack, the
- * Index list and the Research grid all read from this file.
  */
 
 import { asset } from "@/lib/utils";
@@ -28,9 +24,10 @@ export const projects: Project[] = [
   {
     id: "women-are-beautiful",
     index: "01",
-    title: "Women are beautiful",
-    year: 2025,
-    discipline: ["Direction", "AI Production", "Editorial"],
+    title: "Women Are Beautiful",
+    client: "—",
+    year: 2026,
+    discipline: ["AI Production", "Editorial"],
     gallery: [
       m("women-are-beautiful", "IMG_3393.webp"),
       m("women-are-beautiful", "IMG_3392.webp"),
@@ -46,9 +43,10 @@ export const projects: Project[] = [
   {
     id: "runway-training",
     index: "02",
-    title: "Runway training",
-    year: 2025,
-    discipline: ["Direction", "Motion", "Fashion"],
+    title: "Runway Training",
+    client: "—",
+    year: 2026,
+    discipline: ["AI Production", "Direction", "Fashion"],
     gallery: [
       m("runway-training", "IMG_4065.webp"),
       m("runway-training", "IMG_4072.webp"),
@@ -69,7 +67,8 @@ export const projects: Project[] = [
     id: "wet",
     index: "03",
     title: "Wet",
-    year: 2024,
+    client: "—",
+    year: 2026,
     discipline: ["AI Production", "Visual Identity"],
     gallery: [
       m("wet", "IMG_3948.webp"),
@@ -84,9 +83,10 @@ export const projects: Project[] = [
   {
     id: "man-accessories",
     index: "04",
-    title: "Man accessories",
-    year: 2024,
-    discipline: ["Direction", "Editorial", "AI Production"],
+    title: "Man Accessories",
+    client: "—",
+    year: 2026,
+    discipline: ["AI Production", "Editorial", "Direction"],
     gallery: [
       m("man-accessories", "IMG_2966.webp"),
       m("man-accessories", "IMG_2980.webp"),
@@ -107,11 +107,6 @@ export const covers = projects.map((p) => ({
   src: p.gallery[0],
 }));
 
-/**
- * Flat list of every image in every project, tagged with its parent
- * project. Used by the 3D stack and the Research grid so the visuals
- * have variety even when the project count is small.
- */
 export type Plate = {
   key: string;
   src: string;
@@ -120,6 +115,10 @@ export type Plate = {
   projectIndex: string;
 };
 
+/**
+ * Flat list of every project image, tagged with its parent project.
+ * Used by the 3D stack and the References wall.
+ */
 export const plates: Plate[] = projects.flatMap((p) =>
   p.gallery.map((src, i) => ({
     key: `${p.id}-${i}`,
@@ -129,6 +128,35 @@ export const plates: Plate[] = projects.flatMap((p) =>
     projectIndex: p.index,
   })),
 );
+
+/**
+ * Standalone reference images that aren't part of any project's gallery.
+ * Stored locally in /public/media/references/ so they preload alongside
+ * everything else (no third-party CDN).
+ */
+export const references: Plate[] = [
+  {
+    key: "ref-grain",
+    src: asset("/media/references/ref-grain.svg"),
+    projectId: "reference",
+    projectTitle: "Reference — grain",
+    projectIndex: "R1",
+  },
+  {
+    key: "ref-strata",
+    src: asset("/media/references/ref-strata.svg"),
+    projectId: "reference",
+    projectTitle: "Reference — strata",
+    projectIndex: "R2",
+  },
+  {
+    key: "ref-veil",
+    src: asset("/media/references/ref-veil.svg"),
+    projectId: "reference",
+    projectTitle: "Reference — veil",
+    projectIndex: "R3",
+  },
+];
 
 /**
  * 12 plates for the hero stack — distributed across all projects so
@@ -154,3 +182,6 @@ export const stackPlates: Plate[] = (() => {
   }
   return out;
 })();
+
+/** Project plates + reference plates, used by the References wall. */
+export const allReferencePlates: Plate[] = [...references, ...plates];

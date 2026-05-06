@@ -2,23 +2,23 @@
 
 import Image from "next/image";
 import { motion } from "framer-motion";
-import { plates } from "@/lib/projects";
+import { allReferencePlates } from "@/lib/projects";
 
 // Pseudo-random but deterministic per index, so layout doesn't jitter.
-const wall = plates.map((p, i) => ({
+const wall = allReferencePlates.map((p, i) => ({
   ...p,
   rot: ((i * 37) % 9) - 4,
   offX: ((i * 23) % 18) - 9,
   offY: ((i * 17) % 14) - 7,
 }));
 
-export function ResearchView() {
+export function ReferencesView() {
   return (
     <div className="absolute inset-0 overflow-y-auto overflow-x-hidden pt-32 pb-24 md:pt-36 md:pb-32">
       <div className="container-edge mb-10 flex items-end justify-between gap-6">
         <div>
           <span className="font-mono text-micro uppercase tracking-[0.22em] text-ink/55">
-            / Research
+            / References
           </span>
           <h2
             className="mt-3 max-w-2xl font-display leading-[0.92] tracking-tightest"

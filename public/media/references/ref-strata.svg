@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 1000" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <linearGradient id="s" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%"  stop-color="#e9d8b8"/>
+      <stop offset="22%" stop-color="#d2a679"/>
+      <stop offset="40%" stop-color="#b67a4a"/>
+      <stop offset="58%" stop-color="#8a4f2a"/>
+      <stop offset="76%" stop-color="#3d1d10"/>
+      <stop offset="100%" stop-color="#0a0604"/>
+    </linearGradient>
+    <filter id="n2">
+      <feTurbulence type="fractalNoise" baseFrequency="1.4" numOctaves="2" stitchTiles="stitch"/>
+      <feColorMatrix values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.45 0"/>
+    </filter>
+  </defs>
+  <rect width="800" height="1000" fill="url(#s)"/>
+  <g opacity="0.18" stroke="#0a0604" stroke-width="1">
+    <line x1="0" y1="120" x2="800" y2="118"/>
+    <line x1="0" y1="280" x2="800" y2="284"/>
+    <line x1="0" y1="450" x2="800" y2="446"/>
+    <line x1="0" y1="640" x2="800" y2="644"/>
+    <line x1="0" y1="820" x2="800" y2="816"/>
+  </g>
+  <rect width="800" height="1000" filter="url(#n2)" opacity="0.55" style="mix-blend-mode:multiply"/>
+</svg>

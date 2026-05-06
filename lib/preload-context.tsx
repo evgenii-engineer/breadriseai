@@ -8,7 +8,7 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import { plates } from "@/lib/projects";
+import { plates, references } from "@/lib/projects";
 
 type Ctx = {
   /** 0..1 — fraction of asset bytes/items finished. */
@@ -35,9 +35,8 @@ export function PreloadProvider({ children }: { children: ReactNode }) {
   // Collect once.
   const urls = useMemo(() => {
     const seen = new Set<string>();
-    for (const p of plates) {
-      if (p.src) seen.add(p.src);
-    }
+    for (const p of plates) if (p.src) seen.add(p.src);
+    for (const r of references) if (r.src) seen.add(r.src);
     return [...seen];
   }, []);
 

@@ -26,9 +26,6 @@ export const metadata: Metadata = {
     title: site.name,
     description: site.description,
   },
-  icons: {
-    icon: "/favicon.svg",
-  },
 };
 
 export const viewport: Viewport = {

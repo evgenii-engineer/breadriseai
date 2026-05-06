@@ -4,8 +4,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useView } from "@/lib/view-context";
 import { usePreload } from "@/lib/preload-context";
 import { ProjectsView } from "@/components/views/ProjectsView";
-import { ResearchView } from "@/components/views/ResearchView";
-import { StudioView } from "@/components/views/StudioView";
+import { ReferencesView } from "@/components/views/ReferencesView";
 import { ContactView } from "@/components/views/ContactView";
 
 const variants = {
@@ -35,8 +34,7 @@ export function AppShell() {
           transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
         >
           {view === "projects" && <ProjectsView />}
-          {view === "research" && <ResearchView />}
-          {view === "studio" && <StudioView />}
+          {view === "references" && <ReferencesView />}
           {view === "contact" && <ContactView />}
         </motion.div>
       </AnimatePresence>

@@ -1,14 +1,12 @@
 "use client";
 
-import { motion } from "framer-motion";
 import { site } from "@/lib/site";
 import { cn } from "@/lib/utils";
 import { useView, type View } from "@/lib/view-context";
 
 const TABS: { id: View; label: string }[] = [
   { id: "projects", label: "Projects" },
-  { id: "research", label: "Research" },
-  { id: "studio", label: "Studio" },
+  { id: "references", label: "References" },
   { id: "contact", label: "Contact" },
 ];
 
@@ -52,15 +50,6 @@ export function Navigation() {
             })}
           </ul>
         </nav>
-
-        <motion.div
-          className="hidden items-baseline gap-3 pt-2 font-mono text-micro uppercase tracking-[0.22em] text-ink/55 md:flex"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 1.4 }}
-        >
-          <span>{site.availability}</span>
-        </motion.div>
       </div>
     </header>
   );
