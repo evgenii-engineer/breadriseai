@@ -23,7 +23,7 @@ const STATS = [
 ];
 
 export function Index() {
-  const ref = useRef<HTMLDivElement>(null);
+  const ref = useRef<HTMLUListElement>(null);
   useStaggerChildren(ref, { y: 24, stagger: 0.05 });
 
   return (
