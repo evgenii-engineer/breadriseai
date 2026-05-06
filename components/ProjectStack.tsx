@@ -9,13 +9,16 @@ const STACK = projects.slice(0, 12);
 
 /**
  * Per-card 3D placement. The stack is a flat plane of plates fanning out
- * from bottom-left to upper-right, then receding into Z. The wrapper
- * applies a global rotation that tracks the cursor with damping.
+ * diagonally from bottom-left to upper-right, then receding into Z.
+ * Centered around (0,0) so the whole formation sits at the centre of
+ * the wrapper. The wrapper applies a global rotation that tracks the
+ * cursor with damping.
  */
-function cardTransform(i: number) {
-  const x = 70 + i * 95;       // px — drift right
-  const y = -40 - i * 18;      // px — slight rise
-  const z = -i * 130;          // px — recede
+function cardTransform(i: number, n: number) {
+  const mid = (n - 1) / 2;
+  const x = (i - mid) * 120;        // fan horizontally, centered
+  const y = (mid - i) * 26;         // bottom-left → top-right
+  const z = -i * 150;               // recede front-to-back
   return `translate3d(${x}px, ${y}px, ${z}px)`;
 }
 
@@ -30,26 +33,27 @@ export function ProjectStack() {
     if (!wrap || !stack) return;
 
     if (prefersReducedMotion()) {
-      stack.style.transform = "rotateX(-4deg) rotateY(-12deg)";
+      stack.style.transform = "rotateX(-6deg) rotateY(-14deg)";
       return;
     }
 
-    const target = { x: -4, y: -12 }; // base resting tilt (deg)
+    const REST_X = -6;
+    const REST_Y = -14;
+    const target = { x: REST_X, y: REST_Y };
     const current = { x: target.x, y: target.y };
     let raf = 0;
 
     const onMove = (e: PointerEvent) => {
       const rect = wrap.getBoundingClientRect();
-      // -0.5 .. 0.5
       const nx = (e.clientX - rect.left) / rect.width - 0.5;
       const ny = (e.clientY - rect.top) / rect.height - 0.5;
-      target.x = -4 + ny * -10;
-      target.y = -12 + nx * 18;
+      target.x = REST_X + ny * -10;
+      target.y = REST_Y + nx * 22;
     };
 
     const onLeave = () => {
-      target.x = -4;
-      target.y = -12;
+      target.x = REST_X;
+      target.y = REST_Y;
     };
 
     const tick = () => {
@@ -74,12 +78,12 @@ export function ProjectStack() {
     <div
       ref={wrapperRef}
       className="absolute inset-0 grid place-items-center"
-      style={{ perspective: "1900px", perspectiveOrigin: "30% 60%" }}
+      style={{ perspective: "2200px", perspectiveOrigin: "50% 50%" }}
     >
       <div
         ref={stackRef}
-        className="relative h-[44vmin] w-[44vmin] preserve-3d transition-transform duration-[600ms] ease-out-expo will-change-transform"
-        style={{ transform: "rotateX(-4deg) rotateY(-12deg)" }}
+        className="relative h-[60vmin] w-[60vmin] preserve-3d transition-transform duration-[600ms] ease-out-expo will-change-transform"
+        style={{ transform: "rotateX(-6deg) rotateY(-14deg)" }}
       >
         {STACK.map((p, i) => {
           const isFocus = hovered === i;
@@ -94,9 +98,9 @@ export function ProjectStack() {
               onPointerLeave={() =>
                 setHovered((h) => (h === i ? null : h))
               }
-              className="group absolute left-1/2 top-1/2 block aspect-[4/3] w-[28vmin] -translate-x-1/2 -translate-y-1/2 transition-[filter,opacity] duration-500 ease-out-expo"
+              className="group absolute left-1/2 top-1/2 block aspect-[4/3] w-[36vmin] -translate-x-1/2 -translate-y-1/2 transition-[filter,opacity] duration-500 ease-out-expo"
               style={{
-                transform: `${cardTransform(i)} ${drift}`,
+                transform: `${cardTransform(i, STACK.length)} ${drift}`,
                 transformStyle: "preserve-3d",
                 zIndex: isFocus ? 100 : 10 + i,
                 opacity: hovered !== null && !isFocus ? 0.55 : 1,
