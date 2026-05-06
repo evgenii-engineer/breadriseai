@@ -6,7 +6,7 @@
 export const site = {
   name: "Elsewhere Studio",
   shortName: "Elsewhere",
-  domain: "elsewhere.studio",
+  domain: "breadriseai.com",
   description:
     "An independent studio building cinematic digital experiences for fashion, culture and forward-thinking brands.",
   email: "studio@elsewhere.studio",
