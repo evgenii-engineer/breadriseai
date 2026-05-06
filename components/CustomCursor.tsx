@@ -75,17 +75,17 @@ export function CustomCursor() {
       <div
         ref={ringRef}
         data-variant="default"
-        className="fixed left-0 top-0 h-9 w-9 rounded-full border border-bone/70 transition-[border-color,background-color] duration-300 ease-out-expo data-[variant=view]:border-bone data-[variant=view]:bg-bone/10 data-[variant=drag]:border-accent"
+        className="fixed left-0 top-0 h-9 w-9 rounded-full border border-ink/60 transition-[border-color,background-color] duration-300 ease-out-expo data-[variant=view]:border-ink data-[variant=view]:bg-ink/5 data-[variant=drag]:border-accent"
         style={{ transform: "translate3d(-100px,-100px,0)" }}
       >
         <div
           ref={labelRef}
-          className="absolute inset-0 flex items-center justify-center font-mono text-[10px] uppercase tracking-[0.18em] text-bone/90"
+          className="absolute inset-0 flex items-center justify-center font-mono text-[10px] uppercase tracking-[0.18em] text-ink/85"
         />
       </div>
       <div
         ref={dotRef}
-        className="fixed left-0 top-0 h-1.5 w-1.5 rounded-full bg-bone mix-blend-difference"
+        className="fixed left-0 top-0 h-1.5 w-1.5 rounded-full bg-ink mix-blend-multiply"
         style={{ transform: "translate3d(-100px,-100px,0)" }}
       />
     </div>

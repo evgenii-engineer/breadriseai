@@ -7,30 +7,7 @@ import { cn } from "@/lib/utils";
 
 export function Navigation() {
   const [open, setOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
-  const [time, setTime] = useState("");
-
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 24);
-    window.addEventListener("scroll", onScroll, { passive: true });
-    onScroll();
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
-
-  useEffect(() => {
-    const update = () => {
-      const fmt = new Intl.DateTimeFormat("en-GB", {
-        hour: "2-digit",
-        minute: "2-digit",
-        timeZone: "Europe/Paris",
-        hour12: false,
-      });
-      setTime(`${fmt.format(new Date())} CET`);
-    };
-    update();
-    const id = setInterval(update, 30_000);
-    return () => clearInterval(id);
-  }, []);
+  const [active, setActive] = useState<string>("#projects");
 
   // Lock scroll while overlay is open.
   useEffect(() => {
@@ -49,57 +26,76 @@ export function Navigation() {
     return () => window.removeEventListener("keydown", onKey);
   }, []);
 
+  // Highlight whichever section is currently in view.
+  useEffect(() => {
+    const ids = site.navigation.map((n) => n.href.slice(1));
+    const targets = ids
+      .map((id) => document.getElementById(id))
+      .filter(Boolean) as HTMLElement[];
+    if (!targets.length) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries
+          .filter((e) => e.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+        if (visible) setActive(`#${visible.target.id}`);
+      },
+      { threshold: [0.25, 0.5, 0.75] },
+    );
+    targets.forEach((t) => observer.observe(t));
+    return () => observer.disconnect();
+  }, []);
+
   return (
     <>
-      <header
-        className={cn(
-          "fixed inset-x-0 top-0 z-[70] transition-[background-color,backdrop-filter,border-color] duration-500 ease-out-expo",
-          scrolled
-            ? "bg-ink/40 backdrop-blur-md border-b border-bone/5"
-            : "bg-transparent border-b border-transparent",
-        )}
-      >
-        <div className="container-edge flex items-center justify-between py-5 md:py-6">
-          <a
-            href="#top"
-            data-cursor="hover"
-            className="group flex items-center gap-3 font-mono text-micro uppercase tracking-[0.22em]"
-          >
-            <span className="inline-block h-1.5 w-1.5 rounded-full bg-accent transition-transform duration-700 group-hover:scale-125" />
-            <span>{site.shortName}<span className="text-bone/40">®</span></span>
-          </a>
-
-          <nav className="hidden md:block">
-            <ul className="flex items-center gap-8 font-mono text-micro uppercase tracking-[0.18em] text-bone/70">
-              {site.navigation.map((item, i) => (
-                <li key={item.href}>
-                  <a
-                    href={item.href}
-                    className="underline-anim transition-colors hover:text-bone"
-                    data-cursor="hover"
-                  >
-                    <span className="text-bone/35 mr-1.5">{String(i + 1).padStart(2, "0")}</span>
-                    {item.label}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </nav>
-
-          <div className="hidden md:flex items-center gap-6 font-mono text-micro uppercase tracking-[0.18em] text-bone/60">
-            <span aria-live="polite">{time}</span>
+      <header className="fixed inset-x-0 top-0 z-[70]">
+        <div className="container-edge flex items-start justify-between gap-6 pt-5 md:pt-6">
+          {/* left: brand + section tabs */}
+          <div className="flex flex-wrap items-baseline gap-x-4 gap-y-2 font-mono text-[10px] uppercase tracking-[0.22em] md:text-micro">
+            <a
+              href="#projects"
+              data-cursor="hover"
+              className="flex items-baseline gap-2 text-ink"
+            >
+              <span className="text-ink">{site.brandMark}</span>
+              <sup className="text-ink/45">®</sup>
+            </a>
+            <nav className="hidden md:block">
+              <ul className="flex items-baseline gap-x-3">
+                {site.navigation.map((item) => (
+                  <li key={item.href}>
+                    <a
+                      href={item.href}
+                      data-cursor="hover"
+                      className={cn(
+                        "px-1 transition-colors duration-300",
+                        active === item.href
+                          ? "text-ink"
+                          : "text-ink/35 hover:text-ink/65",
+                      )}
+                    >
+                      {item.label}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </nav>
           </div>
 
-          <button
-            type="button"
-            onClick={() => setOpen((v) => !v)}
-            aria-expanded={open}
-            aria-label={open ? "Close menu" : "Open menu"}
-            data-cursor="hover"
-            className="md:hidden font-mono text-micro uppercase tracking-[0.22em]"
-          >
-            {open ? "Close" : "Menu"}
-          </button>
+          {/* right: status + mobile burger */}
+          <div className="flex items-baseline gap-4 font-mono text-[10px] uppercase tracking-[0.22em] text-ink/55 md:text-micro">
+            <span className="hidden md:inline">{site.availability}</span>
+            <button
+              type="button"
+              onClick={() => setOpen((v) => !v)}
+              aria-expanded={open}
+              aria-label={open ? "Close menu" : "Open menu"}
+              data-cursor="hover"
+              className="md:hidden text-ink"
+            >
+              {open ? "Close" : "Menu"}
+            </button>
+          </div>
         </div>
       </header>
 
@@ -107,7 +103,7 @@ export function Navigation() {
         {open && (
           <motion.div
             key="menu"
-            className="fixed inset-0 z-[75] bg-ink text-bone"
+            className="fixed inset-0 z-[75] bg-paper text-ink"
             initial={{ clipPath: "inset(0 0 100% 0)" }}
             animate={{ clipPath: "inset(0 0 0% 0)" }}
             exit={{ clipPath: "inset(0 0 100% 0)" }}
@@ -128,7 +124,7 @@ export function Navigation() {
                       exit={{ y: "110%" }}
                       transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1], delay: 0.18 + i * 0.06 }}
                     >
-                      <span className="font-mono text-micro text-bone/35">
+                      <span className="font-mono text-micro text-ink/35">
                         {String(i + 1).padStart(2, "0")}
                       </span>
                       <span>{item.label}</span>
@@ -136,24 +132,30 @@ export function Navigation() {
                   </li>
                 ))}
               </ul>
-              <div className="grid grid-cols-2 gap-y-6 md:grid-cols-4 font-mono text-micro uppercase tracking-[0.18em] text-bone/55">
+              <div className="grid grid-cols-2 gap-y-6 md:grid-cols-4 font-mono text-micro uppercase tracking-[0.18em] text-ink/55">
                 <div>
-                  <span className="block text-bone/35">Reach</span>
-                  <a href={`mailto:${site.email}`} className="mt-1 block text-bone underline-anim">
+                  <span className="block text-ink/35">Reach</span>
+                  <a href={`mailto:${site.email}`} className="mt-1 block text-ink underline-anim">
                     {site.email}
                   </a>
                 </div>
                 <div>
-                  <span className="block text-bone/35">Where</span>
-                  <span className="mt-1 block text-bone">{site.location}</span>
+                  <span className="block text-ink/35">Where</span>
+                  <span className="mt-1 block text-ink">{site.location}</span>
                 </div>
                 <div>
-                  <span className="block text-bone/35">Status</span>
-                  <span className="mt-1 block text-bone">{site.availability}</span>
+                  <span className="block text-ink/35">Status</span>
+                  <span className="mt-1 block text-ink">{site.availability}</span>
                 </div>
                 <div className="flex flex-wrap gap-x-4 gap-y-1 md:justify-end">
                   {site.social.map((s) => (
-                    <a key={s.label} href={s.href} target="_blank" rel="noreferrer" className="underline-anim">
+                    <a
+                      key={s.label}
+                      href={s.href}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="underline-anim"
+                    >
                       {s.label}
                     </a>
                   ))}

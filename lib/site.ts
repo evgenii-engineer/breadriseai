@@ -4,25 +4,25 @@
  */
 
 export const site = {
-  name: "Elsewhere Studio",
-  shortName: "Elsewhere",
+  name: "Bread Rise",
+  shortName: "Bread Rise",
+  brandMark: "Bread Rise",
   domain: "breadriseai.com",
   description:
-    "An independent studio building cinematic digital experiences for fashion, culture and forward-thinking brands.",
-  email: "studio@elsewhere.studio",
+    "An independent studio building cinematic, mouse-driven digital experiences for fashion, culture and forward-thinking brands.",
+  email: "studio@breadriseai.com",
   location: "Paris · Lisbon · Remote",
-  availability: "Booking projects · winter 2026",
+  availability: "Booking projects · Q3 2026",
   social: [
-    { label: "Instagram", href: "https://instagram.com/" },
+    { label: "Instagram", href: "https://instagram.com/breadrise_ai" },
     { label: "Are.na", href: "https://are.na/" },
     { label: "Vimeo", href: "https://vimeo.com/" },
-    { label: "LinkedIn", href: "https://linkedin.com/" },
+    { label: "TikTok", href: "https://www.tiktok.com/@breadrise_ai" },
   ],
   navigation: [
-    { label: "Index", href: "#index" },
-    { label: "Work", href: "#work" },
+    { label: "Projects", href: "#projects" },
+    { label: "Research", href: "#research" },
     { label: "Studio", href: "#studio" },
-    { label: "Manifesto", href: "#manifesto" },
     { label: "Contact", href: "#contact" },
   ],
 } as const;

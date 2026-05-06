@@ -4,7 +4,6 @@ import { site } from "@/lib/site";
 import { SmoothScroll } from "@/components/SmoothScroll";
 import { CustomCursor } from "@/components/CustomCursor";
 import { LoadingScreen } from "@/components/LoadingScreen";
-import { NoiseOverlay } from "@/components/NoiseOverlay";
 import { Navigation } from "@/components/Navigation";
 import { ScrollIndicator } from "@/components/ScrollIndicator";
 
@@ -33,10 +32,9 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#0a0a0a",
+  themeColor: "#f1ece4",
   width: "device-width",
   initialScale: 1,
-  maximumScale: 1,
 };
 
 export default function RootLayout({
@@ -45,11 +43,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className="bg-ink">
-      <body className="bg-ink text-bone antialiased grain vignette">
+    <html lang="en" className="bg-paper">
+      <body className="bg-paper text-ink antialiased grain">
         <SmoothScroll>
           <LoadingScreen />
-          <NoiseOverlay />
           <CustomCursor />
           <Navigation />
           <ScrollIndicator />

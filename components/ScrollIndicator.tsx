@@ -19,7 +19,7 @@ export function ScrollIndicator() {
   return (
     <div aria-hidden className="pointer-events-none fixed inset-x-0 top-0 z-[71] h-px">
       <div
-        className="h-full bg-accent origin-left"
+        className="h-full bg-ink origin-left"
         style={{ transform: `scaleX(${progress})`, transition: "transform 80ms linear" }}
       />
     </div>
