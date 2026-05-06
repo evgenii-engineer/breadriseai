@@ -1,18 +1,15 @@
 "use client";
 
-import { useEffect, useMemo } from "react";
-import Image from "next/image";
+import { useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { projects, type Project } from "@/lib/projects";
 import { useView } from "@/lib/view-context";
-import { useBreakpoint } from "@/lib/use-breakpoint";
 
 /**
  * Project detail panel.
- * Lays the project's photos out as a chaotic moodboard — scattered
- * across loose columns with per-photo rotation, jitter, and size
- * variance. Vertical scroll is the only navigation; click the close
- * button or hit ESC to exit.
+ * Pinterest-style masonry of every photo in the project. No rotation,
+ * no swipe gestures — just a tight vertical column flow that lets
+ * each photo keep its natural aspect ratio.
  */
 export function ProjectDetail() {
   const { selectedProject, closeProject } = useView();
@@ -33,61 +30,6 @@ export function ProjectDetail() {
   );
 }
 
-type Placed = {
-  src: string;
-  alt: string;
-  leftPct: number;
-  topVh: number;
-  widthVw: number;
-  rotation: number;
-};
-
-/** Tiny deterministic pseudo-random — same input → same output. */
-function rand(seed: number, salt: number) {
-  const x = (seed * 9301 + salt * 49297 + 233280) % 233280;
-  return x / 233280;
-}
-
-function placePhotos(
-  project: Project,
-  cols: number,
-  isSmall: boolean,
-): Placed[] {
-  // Per-column width on which we centre photos.
-  const colWidth = 100 / cols;
-  // Per-photo width as a percentage of viewport width.
-  const baseW = isSmall ? 56 : 24;
-  const widthVar = isSmall ? 6 : 6;
-  // How far apart consecutive photos in the same column sit, vertically.
-  const rowH = isSmall ? 60 : 50;
-
-  return project.gallery.map((src, i) => {
-    const r1 = rand(i + 1, 17);
-    const r2 = rand(i + 1, 31);
-    const r3 = rand(i + 1, 53);
-    const r4 = rand(i + 1, 71);
-
-    const col = i % cols;
-    const rowInCol = Math.floor(i / cols);
-
-    const colCentre = colWidth * col + colWidth / 2;
-    const jitterX = (r1 - 0.5) * colWidth * 0.42;
-
-    const colHeadStart = col * 14;
-    const baseTop = colHeadStart + rowInCol * rowH;
-    const jitterY = (r2 - 0.5) * 14;
-
-    return {
-      src,
-      alt: `${project.title} — ${i + 1}`,
-      leftPct: colCentre + jitterX,
-      topVh: baseTop + jitterY,
-      widthVw: baseW + r3 * widthVar,
-      rotation: (r4 - 0.5) * 14, // ±7°
-    };
-  });
-}
-
 function DetailPanel({
   project,
   onClose,
@@ -95,22 +37,7 @@ function DetailPanel({
   project: Project;
   onClose: () => void;
 }) {
-  const bp = useBreakpoint();
-  const cols = bp === "sm" ? 2 : 3;
-
-  const placed = useMemo(
-    () => placePhotos(project, cols, bp === "sm"),
-    [project, cols, bp],
-  );
-
-  // The board needs to be tall enough to hold the lowest photo.
-  const boardHeightVh = useMemo(() => {
-    if (placed.length === 0) return 100;
-    const maxTop = Math.max(...placed.map((p) => p.topVh));
-    return maxTop + (bp === "sm" ? 80 : 70); // breathing room for the photo + padding
-  }, [placed, bp]);
-
-  // Lock the page scroll while open. Inner panel scrolls.
+  // Lock outer scroll while open; the panel scrolls internally.
   useEffect(() => {
     const prev = document.documentElement.style.overflow;
     document.documentElement.style.overflow = "hidden";
@@ -169,46 +96,42 @@ function DetailPanel({
         </button>
       </div>
 
-      {/* scattered moodboard */}
+      {/* masonry */}
       <div className="absolute inset-0 overflow-y-auto overflow-x-hidden pt-28 pb-16 md:pt-36 md:pb-20">
         <div
-          className="relative mx-auto w-full"
-          style={{ height: `${boardHeightVh}vh`, maxWidth: "min(1600px, 100%)" }}
+          className="mx-auto px-4 md:px-8"
+          style={{ maxWidth: "min(1500px, 100%)" }}
         >
-          {placed.map((p, i) => (
-            <motion.figure
-              key={p.src}
-              initial={{ opacity: 0, y: 24, rotate: p.rotation - 4, scale: 0.96 }}
-              animate={{ opacity: 1, y: 0, rotate: p.rotation, scale: 1 }}
-              transition={{
-                duration: 0.95,
-                ease: [0.16, 1, 0.3, 1],
-                delay: 0.08 * (i % 9),
-              }}
-              className="absolute"
-              style={{
-                left: `${p.leftPct}%`,
-                top: `${p.topVh}vh`,
-                width: `${p.widthVw}vw`,
-                maxWidth: "420px",
-                transform: `translate(-50%, 0) rotate(${p.rotation}deg)`,
-                transformOrigin: "center top",
-              }}
-              data-cursor="hover"
-            >
-              <div className="relative aspect-[3/4] overflow-hidden bg-paper-300 shadow-[0_30px_50px_-30px_rgba(20,16,10,0.55)] ring-1 ring-ink/5 transition-transform duration-500 ease-out hover:-translate-y-1">
-                <Image
-                  src={p.src}
-                  alt={p.alt}
-                  fill
-                  unoptimized
-                  sizes="(max-width:768px) 56vw, 28vw"
-                  className="object-cover"
-                  priority={i < 3}
+          <div className="columns-2 gap-2 sm:columns-3 md:gap-3 lg:columns-4 lg:gap-4">
+            {project.gallery.map((src, i) => (
+              <motion.figure
+                key={src}
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{
+                  duration: 0.7,
+                  ease: [0.16, 1, 0.3, 1],
+                  delay: 0.04 * (i % 10),
+                }}
+                className="mb-2 break-inside-avoid md:mb-3 lg:mb-4"
+              >
+                {/*
+                  Native <img> here — the masonry needs each photo's
+                  natural aspect to drive its rendered height, and
+                  Next/Image with `fill` would blow that up.
+                */}
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={src}
+                  alt={`${project.title} — ${i + 1}`}
+                  loading={i < 4 ? "eager" : "lazy"}
+                  decoding="async"
+                  data-cursor="hover"
+                  className="block w-full bg-paper-300 ring-1 ring-ink/5 transition-transform duration-500 ease-out hover:-translate-y-0.5"
                 />
-              </div>
-            </motion.figure>
-          ))}
+              </motion.figure>
+            ))}
+          </div>
         </div>
       </div>
 
