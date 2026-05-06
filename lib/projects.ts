@@ -131,32 +131,9 @@ export const plates: Plate[] = projects.flatMap((p) =>
 
 /**
  * Standalone reference images that aren't part of any project's gallery.
- * Stored locally in /public/media/references/ so they preload alongside
- * everything else (no third-party CDN).
+ * Drop files into /public/media/references/ and append entries here.
  */
-export const references: Plate[] = [
-  {
-    key: "ref-grain",
-    src: asset("/media/references/ref-grain.svg"),
-    projectId: "reference",
-    projectTitle: "Reference — grain",
-    projectIndex: "R1",
-  },
-  {
-    key: "ref-strata",
-    src: asset("/media/references/ref-strata.svg"),
-    projectId: "reference",
-    projectTitle: "Reference — strata",
-    projectIndex: "R2",
-  },
-  {
-    key: "ref-veil",
-    src: asset("/media/references/ref-veil.svg"),
-    projectId: "reference",
-    projectTitle: "Reference — veil",
-    projectIndex: "R3",
-  },
-];
+export const references: Plate[] = [];
 
 /**
  * 12 plates for the hero stack — distributed across all projects so
