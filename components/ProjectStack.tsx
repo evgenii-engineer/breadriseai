@@ -1,158 +1,235 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import Image from "next/image";
 import { stackPlates } from "@/lib/projects";
 import { prefersReducedMotion } from "@/lib/utils";
 import { useView } from "@/lib/view-context";
-import { useBreakpoint } from "@/lib/use-breakpoint";
+import { useBreakpoint, type Breakpoint } from "@/lib/use-breakpoint";
 
-const STACK = stackPlates;
+const PLATES = stackPlates;
 
 type Geom = {
-  dx: number;
-  dy: number;
-  dz: number;
-  cardW: string;
+  cardW: number;        // px
+  cardH: number;        // px
   perspective: number;
-  restX: number;
-  restY: number;
 };
 
-// Geometry per breakpoint — the px multipliers ride with screen size
-// so the fan fits without overflowing on phones.
-function geometryFor(bp: "sm" | "md" | "lg"): Geom {
-  if (bp === "sm") {
-    return { dx: 56, dy: 14, dz: 80, cardW: "62vmin", perspective: 1500, restX: -4, restY: -10 };
-  }
-  if (bp === "md") {
-    return { dx: 88, dy: 20, dz: 120, cardW: "44vmin", perspective: 1900, restX: -5, restY: -12 };
-  }
-  return { dx: 120, dy: 26, dz: 150, cardW: "36vmin", perspective: 2200, restX: -6, restY: -14 };
+function geometryFor(bp: Breakpoint): Geom {
+  if (bp === "sm") return { cardW: 220, cardH: 280, perspective: 1400 };
+  if (bp === "md") return { cardW: 320, cardH: 410, perspective: 1700 };
+  return { cardW: 380, cardH: 490, perspective: 2000 };
 }
 
-function cardTransform(i: number, n: number, g: Geom) {
-  const mid = (n - 1) / 2;
-  const x = (i - mid) * g.dx;
-  const y = (mid - i) * g.dy;
-  const z = -i * g.dz;
-  return `translate3d(${x}px, ${y}px, ${z}px)`;
+/**
+ * Cover-Flow style placement around the active card. All cards face
+ * the centre — past records lean to the right, future records lean
+ * to the left, both shrink and recede with distance.
+ */
+function plateStyle(offset: number, geom: Geom): React.CSSProperties {
+  if (offset === 0) {
+    return {
+      transform: "translate3d(0px, 0px, 60px) rotateY(0deg) scale(1)",
+      opacity: 1,
+      zIndex: 100,
+    };
+  }
+  const o = Math.abs(offset);
+  // Drop very-far cards entirely — they never read on screen and hurt perf.
+  if (o > 4) {
+    return { opacity: 0, transform: "translateZ(-1500px)", zIndex: 0 };
+  }
+  const sign = Math.sign(offset);
+  const tx = sign * geom.cardW * (0.42 + 0.18 * (o - 1));
+  const tz = -160 * o;
+  const ry = sign * -36;
+  const scale = 1 - o * 0.06;
+  const opacity = Math.max(0, 0.95 - o * 0.18);
+  return {
+    transform: `translate3d(${tx}px, 0px, ${tz}px) rotateY(${ry}deg) scale(${scale})`,
+    opacity,
+    zIndex: 100 - o,
+  };
 }
 
 export function ProjectStack() {
+  const [active, setActive] = useState(0);
+  const lastInputRef = useRef(0);
   const wrapperRef = useRef<HTMLDivElement>(null);
-  const stackRef = useRef<HTMLDivElement>(null);
-  const [hovered, setHovered] = useState<number | null>(null);
-  const { openProject } = useView();
   const bp = useBreakpoint();
   const geom = useMemo(() => geometryFor(bp), [bp]);
+  const { openProject, selectedProject } = useView();
+  const total = PLATES.length;
+  const detailOpen = selectedProject !== null;
 
+  const advance = useCallback(
+    (dir: 1 | -1) => {
+      const now = performance.now();
+      // Debounce wheel/swipe so a single gesture moves by one record.
+      if (now - lastInputRef.current < 280) return;
+      lastInputRef.current = now;
+      setActive((a) => Math.max(0, Math.min(total - 1, a + dir)));
+    },
+    [total],
+  );
+
+  // Wheel + keyboard. Vertical and horizontal scroll both step.
   useEffect(() => {
-    const wrap = wrapperRef.current;
-    const stack = stackRef.current;
-    if (!wrap || !stack) return;
-
-    if (prefersReducedMotion()) {
-      stack.style.transform = `rotateX(${geom.restX}deg) rotateY(${geom.restY}deg)`;
-      return;
-    }
-
-    const target = { x: geom.restX, y: geom.restY };
-    const current = { x: target.x, y: target.y };
-    let raf = 0;
-
-    const onMove = (e: PointerEvent) => {
-      const rect = wrap.getBoundingClientRect();
-      const nx = (e.clientX - rect.left) / rect.width - 0.5;
-      const ny = (e.clientY - rect.top) / rect.height - 0.5;
-      target.x = geom.restX + ny * -10;
-      target.y = geom.restY + nx * 22;
+    if (detailOpen) return;
+    const onWheel = (e: WheelEvent) => {
+      const delta =
+        Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
+      if (Math.abs(delta) < 10) return;
+      e.preventDefault();
+      advance(delta > 0 ? 1 : -1);
     };
-    const onLeave = () => {
-      target.x = geom.restX;
-      target.y = geom.restY;
+    const onKey = (e: KeyboardEvent) => {
+      if (["ArrowRight", "ArrowDown", "PageDown", " "].includes(e.key)) {
+        advance(1);
+      } else if (
+        ["ArrowLeft", "ArrowUp", "PageUp"].includes(e.key)
+      ) {
+        advance(-1);
+      } else if (e.key === "Home") {
+        setActive(0);
+      } else if (e.key === "End") {
+        setActive(total - 1);
+      }
     };
-    const tick = () => {
-      current.x += (target.x - current.x) * 0.06;
-      current.y += (target.y - current.y) * 0.06;
-      stack.style.transform = `rotateX(${current.x}deg) rotateY(${current.y}deg)`;
-      raf = requestAnimationFrame(tick);
-    };
-
-    window.addEventListener("pointermove", onMove);
-    wrap.addEventListener("pointerleave", onLeave);
-    raf = requestAnimationFrame(tick);
-
+    const node = wrapperRef.current;
+    node?.addEventListener("wheel", onWheel, { passive: false });
+    window.addEventListener("keydown", onKey);
     return () => {
-      window.removeEventListener("pointermove", onMove);
-      wrap.removeEventListener("pointerleave", onLeave);
-      cancelAnimationFrame(raf);
+      node?.removeEventListener("wheel", onWheel);
+      window.removeEventListener("keydown", onKey);
     };
-  }, [geom]);
+  }, [advance, total, detailOpen]);
+
+  // Touch swipe.
+  useEffect(() => {
+    if (detailOpen) return;
+    let startX: number | null = null;
+    const onStart = (e: TouchEvent) => {
+      startX = e.touches[0]?.clientX ?? null;
+    };
+    const onEnd = (e: TouchEvent) => {
+      if (startX == null) return;
+      const endX = e.changedTouches[0]?.clientX;
+      if (endX == null) return;
+      const dx = endX - startX;
+      if (Math.abs(dx) > 40) advance(dx < 0 ? 1 : -1);
+      startX = null;
+    };
+    const node = wrapperRef.current;
+    node?.addEventListener("touchstart", onStart, { passive: true });
+    node?.addEventListener("touchend", onEnd, { passive: true });
+    return () => {
+      node?.removeEventListener("touchstart", onStart);
+      node?.removeEventListener("touchend", onEnd);
+    };
+  }, [advance, detailOpen]);
+
+  // Subtle resting tilt on the whole crate so it never reads flat.
+  // Disabled in reduced-motion.
+  const restTilt = prefersReducedMotion()
+    ? "rotateX(0deg) rotateY(0deg)"
+    : "rotateX(-3deg) rotateY(-1deg)";
 
   return (
     <div
       ref={wrapperRef}
-      className="absolute inset-0 grid place-items-center"
-      style={{ perspective: `${geom.perspective}px`, perspectiveOrigin: "50% 50%" }}
+      className="absolute inset-0 grid place-items-center select-none"
+      style={{
+        perspective: `${geom.perspective}px`,
+        perspectiveOrigin: "50% 55%",
+      }}
     >
       <div
-        ref={stackRef}
-        className="relative h-[60vmin] w-[60vmin] preserve-3d transition-transform duration-[600ms] ease-out-expo will-change-transform"
-        style={{ transform: `rotateX(${geom.restX}deg) rotateY(${geom.restY}deg)` }}
+        className="relative preserve-3d"
+        style={{
+          width: geom.cardW,
+          height: geom.cardH,
+          transform: restTilt,
+        }}
       >
-        {STACK.map((p, i) => {
-          const isFocus = hovered === i;
-          const drift = isFocus ? "translateZ(80px)" : "";
+        {PLATES.map((p, i) => {
+          const offset = i - active;
+          const isActive = offset === 0;
+          const isVisible = Math.abs(offset) <= 4;
+          const onClick = () => {
+            if (isActive) openProject(p.projectId);
+            else setActive(i);
+          };
           return (
             <button
               key={p.key}
               type="button"
-              onClick={() => openProject(p.projectId)}
-              data-cursor="view"
-              data-cursor-label="View"
-              onPointerEnter={() => setHovered(i)}
-              onPointerLeave={() =>
-                setHovered((h) => (h === i ? null : h))
+              onClick={onClick}
+              data-cursor={isActive ? "view" : "hover"}
+              data-cursor-label={isActive ? "Open" : "Flip"}
+              aria-label={
+                isActive
+                  ? `Open ${p.projectTitle}`
+                  : `Flip to ${p.projectTitle}`
               }
-              aria-label={`Open ${p.projectTitle}`}
-              className="group absolute left-1/2 top-1/2 block aspect-[4/3] -translate-x-1/2 -translate-y-1/2 transition-[filter,opacity] duration-500 ease-out-expo"
+              tabIndex={isActive ? 0 : -1}
+              aria-hidden={!isVisible}
+              className="group absolute inset-0 block"
               style={{
-                width: geom.cardW,
-                transform: `${cardTransform(i, STACK.length, geom)} ${drift}`,
+                ...plateStyle(offset, geom),
+                transition:
+                  "transform 720ms cubic-bezier(0.16, 1, 0.3, 1), opacity 520ms ease-out",
                 transformStyle: "preserve-3d",
-                zIndex: isFocus ? 100 : 10 + i,
-                opacity: hovered !== null && !isFocus ? 0.55 : 1,
-                filter: hovered !== null && !isFocus ? "saturate(0.6) brightness(0.95)" : "none",
+                willChange: "transform, opacity",
+                pointerEvents: isVisible ? "auto" : "none",
               }}
             >
-              <div
-                className="relative h-full w-full overflow-hidden bg-paper-300 shadow-[0_22px_45px_-25px_rgba(20,16,10,0.45)] ring-1 ring-ink/5"
-                style={{
-                  transform: isFocus ? "scale(1.04)" : "scale(1)",
-                  transition: "transform 600ms cubic-bezier(0.16,1,0.3,1)",
-                }}
-              >
+              <div className="relative h-full w-full overflow-hidden bg-paper-300 shadow-[0_30px_50px_-25px_rgba(20,16,10,0.55)] ring-1 ring-ink/5">
                 <Image
                   src={p.src}
                   alt={p.projectTitle}
                   fill
                   unoptimized
-                  sizes="(max-width:768px) 62vmin, (max-width:1024px) 44vmin, 36vmin"
+                  sizes="(max-width:768px) 60vw, (max-width:1024px) 38vw, 30vw"
                   className="object-cover"
-                  priority={i < 4}
+                  priority={Math.abs(offset) <= 1}
                 />
-                <span
-                  aria-hidden
-                  className="pointer-events-none absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-paper/15"
-                />
-                <span className="pointer-events-none absolute left-3 top-3 font-mono text-[9px] uppercase tracking-[0.2em] text-paper/95 opacity-0 transition-opacity duration-500 group-hover:opacity-100">
-                  {p.projectIndex} · {p.projectTitle}
-                </span>
+                {isActive && (
+                  <span className="pointer-events-none absolute left-3 top-3 font-mono text-[10px] uppercase tracking-[0.22em] text-paper/95 opacity-0 transition-opacity duration-500 group-hover:opacity-100">
+                    {p.projectIndex} · {p.projectTitle}
+                  </span>
+                )}
               </div>
             </button>
           );
         })}
+      </div>
+
+      {/* Active title beneath the crate */}
+      <div className="container-edge pointer-events-none absolute inset-x-0 bottom-24 z-20 flex justify-center md:bottom-28">
+        <div
+          key={active}
+          className="text-center"
+          style={{
+            animation: "fade-in 0.7s cubic-bezier(0.16, 1, 0.3, 1) both",
+          }}
+        >
+          <span className="font-mono text-[10px] uppercase tracking-[0.22em] text-ink/55 md:text-micro">
+            {PLATES[active].projectIndex} · {String(active + 1).padStart(2, "0")}{" / "}{String(total).padStart(2, "0")}
+          </span>
+          <h3
+            className="mt-1 leading-[0.95] tracking-tightest"
+            style={{ fontSize: "clamp(1.15rem, 2.2vw, 2rem)" }}
+          >
+            {PLATES[active].projectTitle}
+          </h3>
+        </div>
       </div>
     </div>
   );
