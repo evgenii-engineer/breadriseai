@@ -60,6 +60,7 @@ function plateStyle(offset: number, geom: Geom): React.CSSProperties {
 
 export function ProjectStack() {
   const [active, setActive] = useState(0);
+  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const lastInputRef = useRef(0);
   const wrapperRef = useRef<HTMLDivElement>(null);
   const bp = useBreakpoint();
@@ -171,8 +172,12 @@ export function ProjectStack() {
               key={p.key}
               type="button"
               onClick={onClick}
-              data-cursor={isActive ? "view" : "hover"}
-              data-cursor-label={isActive ? "Open" : "Flip"}
+              onPointerEnter={() => setHoveredIndex(i)}
+              onPointerLeave={() =>
+                setHoveredIndex((h) => (h === i ? null : h))
+              }
+              onFocus={() => setHoveredIndex(i)}
+              onBlur={() => setHoveredIndex((h) => (h === i ? null : h))}
               aria-label={
                 isActive
                   ? `Open ${p.projectTitle}`
@@ -200,36 +205,28 @@ export function ProjectStack() {
                   className="object-cover"
                   priority={Math.abs(offset) <= 1}
                 />
-                {isActive && (
-                  <span className="pointer-events-none absolute left-3 top-3 font-mono text-[10px] uppercase tracking-[0.22em] text-paper/95 opacity-0 transition-opacity duration-500 group-hover:opacity-100">
-                    {p.projectIndex} · {p.projectTitle}
-                  </span>
-                )}
               </div>
             </button>
           );
         })}
       </div>
 
-      {/* Active title beneath the crate */}
-      <div className="container-edge pointer-events-none absolute inset-x-0 bottom-24 z-20 flex justify-center md:bottom-28">
-        <div
-          key={active}
-          className="text-center"
-          style={{
-            animation: "fade-in 0.7s cubic-bezier(0.16, 1, 0.3, 1) both",
-          }}
+      {/* Hover-only project name caption — shown only when the user
+          actually hovers a card in the crate, in Wikipedia link blue. */}
+      <div
+        className="pointer-events-none absolute inset-x-0 z-20 flex justify-center px-6 transition-opacity duration-300"
+        style={{
+          bottom: "calc(50% - " + (geom.cardH / 2 + 28) + "px)",
+          opacity: hoveredIndex !== null ? 1 : 0,
+        }}
+        aria-hidden={hoveredIndex === null}
+      >
+        <span
+          className="text-[13px] leading-tight md:text-[14px]"
+          style={{ color: "#0645AD" }}
         >
-          <span className="font-mono text-[10px] uppercase tracking-[0.22em] text-ink/55 md:text-micro">
-            {PLATES[active].projectIndex} · {String(active + 1).padStart(2, "0")}{" / "}{String(total).padStart(2, "0")}
-          </span>
-          <h3
-            className="mt-1 leading-[0.95] tracking-tightest"
-            style={{ fontSize: "clamp(1.15rem, 2.2vw, 2rem)" }}
-          >
-            {PLATES[active].projectTitle}
-          </h3>
-        </div>
+          {PLATES[hoveredIndex ?? active].projectTitle}
+        </span>
       </div>
     </div>
   );

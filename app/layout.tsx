@@ -1,7 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import { site } from "@/lib/site";
-import { CustomCursor } from "@/components/CustomCursor";
 import { LoadingScreen } from "@/components/LoadingScreen";
 import { Navigation } from "@/components/Navigation";
 import { ViewProvider } from "@/lib/view-context";
@@ -29,7 +28,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#f1ece4",
+  themeColor: "#ffffff",
   width: "device-width",
   initialScale: 1,
 };
@@ -41,11 +40,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className="bg-paper">
-      <body className="bg-paper text-ink antialiased grain">
+      <body className="bg-paper text-ink antialiased">
         <PreloadProvider>
           <ViewProvider>
             <LoadingScreen />
-            <CustomCursor />
             <Navigation />
             <main id="main">{children}</main>
           </ViewProvider>

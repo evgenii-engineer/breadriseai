@@ -3,9 +3,11 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { ProjectStack } from "@/components/ProjectStack";
 import { ProjectIndex } from "@/components/ProjectIndex";
-import { site } from "@/lib/site";
 import { cn } from "@/lib/utils";
 import { useView } from "@/lib/view-context";
+
+const TAGLINE =
+  "AI visuals, rare aesthetics, and visual identities engineered to make brands impossible to ignore";
 
 export function ProjectsView() {
   const { mode, setMode } = useView();
@@ -42,16 +44,16 @@ export function ProjectsView() {
       {/* tagline + Overview/Index toggle, anchored bottom */}
       <div className="container-edge pointer-events-none absolute inset-x-0 bottom-4 z-30 flex flex-col items-stretch gap-3 md:bottom-10 md:flex-row md:items-end md:justify-between md:gap-8">
         <motion.p
-          className="hidden max-w-sm font-mono text-micro uppercase tracking-[0.18em] text-ink/60 md:block"
+          className="hidden max-w-md text-[12px] leading-snug text-accent md:block md:text-[13px]"
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1.0, ease: [0.16, 1, 0.3, 1], delay: 0.4 }}
         >
-          {site.description}
+          {TAGLINE}
         </motion.p>
 
         <motion.div
-          className="pointer-events-auto flex items-center justify-end gap-1 font-mono text-[10px] uppercase tracking-[0.22em] text-ink md:text-micro"
+          className="pointer-events-auto flex items-center justify-end gap-1 text-[12px] text-ink/85 md:text-[13px]"
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1.0, ease: [0.16, 1, 0.3, 1], delay: 0.5 }}
@@ -82,7 +84,6 @@ function ToggleBtn({
     <button
       type="button"
       onClick={onClick}
-      data-cursor="hover"
       className={cn(
         "px-2 py-1 transition-colors duration-300",
         active ? "text-ink" : "text-ink/35 hover:text-ink/70",

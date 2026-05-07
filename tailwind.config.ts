@@ -9,15 +9,14 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        // Warm off-white paper background
+        // White paper background
         paper: {
-          DEFAULT: "#f1ece4",
-          50: "#faf6ef",
-          100: "#f4efe7",
-          200: "#ebe5da",
-          300: "#ddd5c6",
+          DEFAULT: "#ffffff",
+          50: "#ffffff",
+          100: "#fafafa",
+          200: "#f4f4f4",
+          300: "#eaeaea",
         },
-        // Near-black ink for text
         ink: {
           DEFAULT: "#0e0d0b",
           900: "#0e0d0b",
@@ -27,9 +26,10 @@ const config: Config = {
           500: "#9a948a",
           400: "#c2bdb3",
         },
+        // Wikipedia link blue
         accent: {
-          DEFAULT: "#d44617",
-          muted: "#ff8a5f",
+          DEFAULT: "#0645AD",
+          hover: "#0b5fd0",
         },
       },
       fontFamily: {
