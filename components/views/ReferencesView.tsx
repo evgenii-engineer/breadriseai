@@ -18,14 +18,14 @@ export function ReferencesView() {
   const isSmall = bp === "sm";
 
   const wall = useMemo(() => {
-    // Tight, chaotic packing — small photos at random positions,
-    // never rotated. Loose 4/2 column rhythm keeps it from collapsing
-    // into a single dense pile.
-    const cols = isSmall ? 2 : 4;
+    // Tiny finder-thumbnail-style plates scattered across the wall.
+    // Sizes are in pixels (not vw) so they stay genuinely small on
+    // any viewport, with mild per-photo variance for chaos.
+    const cols = isSmall ? 3 : 7;
     const colWidth = 100 / cols;
-    const rowH = isSmall ? 38 : 26;
-    const baseW = isSmall ? 30 : 13;
-    const widthVar = isSmall ? 6 : 5;
+    const rowHpx = isSmall ? 130 : 150;     // vertical rhythm in px
+    const baseWpx = isSmall ? 78 : 96;       // smallest photo width
+    const widthVarPx = isSmall ? 22 : 28;    // up to +N px
 
     return allReferencePlates.map((p, i) => {
       const r1 = rand(i + 1, 17);
@@ -36,25 +36,25 @@ export function ReferencesView() {
       const rowInCol = Math.floor(i / cols);
 
       const colCentre = colWidth * col + colWidth / 2;
-      const jitterX = (r1 - 0.5) * colWidth * 0.7;
+      const jitterX = (r1 - 0.5) * colWidth * 0.55;
 
-      const colHeadStart = col * (isSmall ? 8 : 10);
-      const baseTop = colHeadStart + rowInCol * rowH;
-      const jitterY = (r2 - 0.5) * (isSmall ? 14 : 12);
+      const colHeadStart = col * (isSmall ? 28 : 22);
+      const baseTopPx = colHeadStart + rowInCol * rowHpx;
+      const jitterYpx = (r2 - 0.5) * (isSmall ? 28 : 36);
 
       return {
         ...p,
         leftPct: colCentre + jitterX,
-        topVh: baseTop + jitterY,
-        widthVw: baseW + r3 * widthVar,
+        topPx: baseTopPx + jitterYpx,
+        widthPx: Math.round(baseWpx + r3 * widthVarPx),
       };
     });
   }, [isSmall]);
 
-  const boardHeightVh = useMemo(() => {
-    if (wall.length === 0) return 100;
-    const maxTop = Math.max(...wall.map((p) => p.topVh));
-    return maxTop + (isSmall ? 50 : 40);
+  const boardHeightPx = useMemo(() => {
+    if (wall.length === 0) return 800;
+    const maxTop = Math.max(...wall.map((p) => p.topPx));
+    return maxTop + (isSmall ? 220 : 240);
   }, [wall, isSmall]);
 
   return (
@@ -70,7 +70,7 @@ export function ReferencesView() {
 
       <div
         className="relative mx-auto w-full"
-        style={{ height: `${boardHeightVh}vh`, maxWidth: "min(1700px, 100%)" }}
+        style={{ height: `${boardHeightPx}px`, maxWidth: "min(1700px, 100%)" }}
       >
         {wall.map((p, i) => (
           <motion.button
@@ -88,9 +88,8 @@ export function ReferencesView() {
             className="absolute block transition-transform duration-500 ease-out hover:-translate-y-0.5"
             style={{
               left: `${p.leftPct}%`,
-              top: `${p.topVh}vh`,
-              width: `${p.widthVw}vw`,
-              maxWidth: 240,
+              top: `${p.topPx}px`,
+              width: `${p.widthPx}px`,
               transform: "translate(-50%, 0)",
             }}
           >
