@@ -24,33 +24,39 @@ export function ReferencesView() {
   const bp = useBreakpoint();
   const isSmall = bp === "sm";
 
-  const cluster = useMemo(() => {
-    // Phyllotaxis (sunflower seed) spiral: angle steps by the golden
-    // angle ≈ 137.5°, radius grows as sqrt(i). Gives evenly distributed
-    // points across the disk with no clumping at any radius.
-    const goldenAngle = Math.PI * (3 - Math.sqrt(5));
-    const c = isSmall ? 38 : 78;          // spiral spacing constant
-    const minR = isSmall ? 48 : 88;       // radius for the very first plate
-    const widthMin = isSmall ? 56 : 78;
-    const widthVar = isSmall ? 18 : 22;
+  const { cols, placed } = useMemo(() => {
+    // Lay out the icons on a regular grid, but assign each plate to
+    // a *random* cell from a deliberately oversized pool of cells.
+    // Some cells stay empty — gives the Finder/desktop look where a
+    // few icons have been dragged off, leaving holes.
+    const cols = isSmall ? 4 : 9;
+    const total = allReferencePlates.length;
+    const fillRatio = 0.6; // ~60% cells filled, 40% empty
+    const cellCount = Math.ceil(total / fillRatio);
+    const rows = Math.ceil(cellCount / cols);
 
-    return allReferencePlates.map((p, i) => {
-      const r1 = rand(i + 1, 17);
-      const r2 = rand(i + 1, 31);
+    // Deterministic Fisher–Yates shuffle of cell indices.
+    const indices = Array.from({ length: cols * rows }, (_, i) => i);
+    for (let i = indices.length - 1; i > 0; i--) {
+      const r = rand(i + 1, 17);
+      const j = Math.floor(r * (i + 1));
+      [indices[i], indices[j]] = [indices[j], indices[i]];
+    }
 
-      const angle = i * goldenAngle + r1 * 0.25;          // tiny angular jitter
-      const radius = minR + c * Math.sqrt(i);
-      const tx = Math.cos(angle) * radius;
-      const ty = Math.sin(angle) * radius;
-      const widthPx = Math.round(widthMin + r2 * widthVar);
-
-      return { ...p, tx, ty, widthPx };
+    // Assign the first N shuffled cells to plates, in order.
+    const placed = allReferencePlates.map((p, i) => {
+      const cellIdx = indices[i];
+      const col = cellIdx % cols;
+      const row = Math.floor(cellIdx / cols);
+      return { ...p, col, row };
     });
+
+    return { cols, placed };
   }, [isSmall]);
 
   return (
-    <div className="absolute inset-0 overflow-hidden bg-white">
-      <div className="container-edge absolute inset-x-0 top-24 z-20 md:top-28">
+    <div className="absolute inset-0 overflow-y-auto overflow-x-hidden bg-white pt-24 pb-16 md:pt-28 md:pb-20">
+      <div className="container-edge mb-6">
         <span
           className="block leading-none"
           style={{ fontSize: 14, color: ACCENT }}
@@ -59,35 +65,38 @@ export function ReferencesView() {
         </span>
       </div>
 
-      {/* radial cluster anchored to the centre of the viewport.
-          Positioning lives on the outer wrapper, animation on the
-          inner motion node — keep them separate so framer-motion
-          can't overwrite our pixel transform when it animates the
-          fade-in. */}
-      <div className="absolute left-1/2 top-1/2 h-0 w-0">
-        {cluster.map((p, i) => {
-          const fn = fileNameFor(p.src);
-          return (
-            <div
-              key={p.key}
-              className="absolute left-0 top-0"
-              style={{
-                width: p.widthPx,
-                transform: `translate(${p.tx}px, ${p.ty}px) translate(-50%, -50%)`,
-              }}
-            >
+      <div
+        className="mx-auto px-4 md:px-8"
+        style={{ maxWidth: "min(1700px, 100%)" }}
+      >
+        <div
+          className="grid items-start"
+          style={{
+            gridTemplateColumns: `repeat(${cols}, minmax(0, 1fr))`,
+            columnGap: 12,
+            rowGap: 24,
+          }}
+        >
+          {placed.map((p, i) => {
+            const fn = fileNameFor(p.src);
+            return (
               <motion.button
+                key={p.key}
                 type="button"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{
-                  duration: 0.7,
+                  duration: 0.55,
                   ease: [0.16, 1, 0.3, 1],
                   delay: 0.025 * (i % 16),
                 }}
                 onClick={() => openProject(p.projectId)}
                 aria-label={`Open ${p.projectTitle}`}
-                className="group flex w-full flex-col items-center gap-1.5 rounded-md p-1.5 text-center transition-colors duration-200 hover:bg-ink/[0.05] focus:bg-ink/[0.08] focus:outline-none"
+                style={{
+                  gridColumnStart: p.col + 1,
+                  gridRowStart: p.row + 1,
+                }}
+                className="group flex flex-col items-center gap-1.5 rounded-md p-1.5 text-center transition-colors duration-200 hover:bg-ink/[0.05] focus:bg-ink/[0.08] focus:outline-none"
               >
                 <div className="relative aspect-[3/4] w-full overflow-hidden bg-paper-200">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -111,9 +120,9 @@ export function ReferencesView() {
                   {fn}
                 </span>
               </motion.button>
-            </div>
-          );
-        })}
+            );
+          })}
+        </div>
       </div>
     </div>
   );
