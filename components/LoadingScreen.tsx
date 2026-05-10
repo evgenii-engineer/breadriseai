@@ -1,27 +1,30 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
 import { usePreload } from "@/lib/preload-context";
 
 const ACCENT = "#0645AD";
 
+/**
+ * First-paint loading screen. Reads progress from PreloadContext and
+ * smooth-fills the bar with rAF damping so jitter from staggered
+ * `onload` callbacks doesn't show up. Once `ready` flips and the bar
+ * reaches 100, we fade out and unmount.
+ */
 export function LoadingScreen() {
   const { progress, ready } = usePreload();
   const [hidden, setHidden] = useState(false);
+  const [exiting, setExiting] = useState(false);
   const [displayed, setDisplayed] = useState(0);
 
-  // Lock outer scroll while the gate is up.
   useEffect(() => {
-    if (hidden) {
+    if (typeof document === "undefined") return;
+    document.body.style.overflow = hidden ? "" : "hidden";
+    return () => {
       document.body.style.overflow = "";
-    } else {
-      document.body.style.overflow = "hidden";
-    }
-    return () => { document.body.style.overflow = ""; };
+    };
   }, [hidden]);
 
-  // Smooth-fill the progress so the bar never jitters or jumps backwards.
   useEffect(() => {
     let raf = 0;
     const tick = () => {
@@ -36,51 +39,51 @@ export function LoadingScreen() {
     return () => cancelAnimationFrame(raf);
   }, [progress, ready]);
 
-  // Hide once the bar reaches 100 visually.
   useEffect(() => {
-    if (ready && displayed >= 0.999) {
-      const t = setTimeout(() => setHidden(true), 280);
+    if (ready && displayed >= 0.999 && !exiting) {
+      setExiting(true);
+      const t = setTimeout(() => setHidden(true), 700);
       return () => clearTimeout(t);
     }
-  }, [ready, displayed]);
+  }, [ready, displayed, exiting]);
+
+  if (hidden) return null;
 
   const pct = Math.round(displayed * 100);
 
   return (
-    <AnimatePresence>
-      {!hidden && (
-        <motion.div
-          key="loader"
-          className="fixed inset-0 z-[100] flex items-center justify-center bg-white"
-          initial={{ opacity: 1 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+    <div
+      role="status"
+      aria-live="polite"
+      aria-label={`Loading ${pct}%`}
+      className="fixed inset-0 z-[100] flex items-center justify-center bg-white"
+      style={{
+        opacity: exiting ? 0 : 1,
+        transition: "opacity 700ms cubic-bezier(0.16, 1, 0.3, 1)",
+      }}
+    >
+      <div className="flex flex-col items-center gap-3">
+        <span
+          style={{ fontSize: 14, color: ACCENT, lineHeight: 1 }}
+          className="font-normal tracking-normal"
         >
-          <div className="flex flex-col items-center gap-3">
-            <span
-              style={{ fontSize: 14, color: ACCENT, lineHeight: 1 }}
-              className="font-normal tracking-normal"
-            >
-              bread rise
-            </span>
-            <div
-              className="relative h-[2px] w-[160px] overflow-hidden rounded-full"
-              style={{ backgroundColor: "rgba(6, 69, 173, 0.15)" }}
-              aria-hidden
-            >
-              <div
-                className="absolute inset-y-0 left-0 rounded-full"
-                style={{
-                  backgroundColor: ACCENT,
-                  width: `${pct}%`,
-                  transition: "width 80ms linear",
-                }}
-              />
-            </div>
-          </div>
-        </motion.div>
-      )}
-    </AnimatePresence>
+          bread rise
+        </span>
+        <div
+          className="relative h-[2px] w-[160px] overflow-hidden rounded-full"
+          style={{ backgroundColor: "rgba(6, 69, 173, 0.15)" }}
+          aria-hidden
+        >
+          <div
+            className="absolute inset-y-0 left-0 rounded-full"
+            style={{
+              backgroundColor: ACCENT,
+              width: `${pct}%`,
+              transition: "width 80ms linear",
+            }}
+          />
+        </div>
+      </div>
+    </div>
   );
 }

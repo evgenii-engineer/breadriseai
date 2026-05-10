@@ -1,6 +1,6 @@
 "use client";
 
-import { AnimatePresence, motion } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
 import { ProjectStack } from "@/components/ProjectStack";
 import { ProjectIndex } from "@/components/ProjectIndex";
 import { cn } from "@/lib/utils";
@@ -10,64 +10,67 @@ const ACCENT = "#0645AD";
 const TAGLINE =
   "AI visuals, rare aesthetics, and visual identities engineered to make brands impossible to ignore";
 
+const FADE_MS = 320;
+
 export function ProjectsView() {
   const { mode, setMode } = useView();
 
+  const [active, setActive] = useState(mode);
+  const [previous, setPrevious] = useState<typeof mode | null>(null);
+  const fadeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    if (mode === active) return;
+    setPrevious(active);
+    setActive(mode);
+    if (fadeTimer.current) clearTimeout(fadeTimer.current);
+    fadeTimer.current = setTimeout(() => setPrevious(null), FADE_MS);
+    return () => {
+      if (fadeTimer.current) clearTimeout(fadeTimer.current);
+    };
+  }, [mode, active]);
+
   return (
     <div className="absolute inset-0">
-      {/* canvas */}
-      <AnimatePresence mode="wait">
-        {mode === "overview" ? (
-          <motion.div
-            key="overview"
-            className="absolute inset-0"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-          >
-            <ProjectStack />
-          </motion.div>
-        ) : (
-          <motion.div
-            key="index"
-            className="absolute inset-0"
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 12 }}
-            transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-          >
-            <ProjectIndex />
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {previous && (
+        <div
+          key={`prev-${previous}`}
+          className="absolute inset-0 opacity-0 transition-opacity"
+          style={{ transitionDuration: `${FADE_MS}ms` }}
+          aria-hidden
+        >
+          {previous === "overview" ? <ProjectStack /> : <ProjectIndex />}
+        </div>
+      )}
+      <div
+        key={`live-${active}`}
+        className="absolute inset-0 animate-view-in"
+        style={{ animationDuration: `${FADE_MS}ms` }}
+      >
+        {active === "overview" ? <ProjectStack /> : <ProjectIndex />}
+      </div>
 
       {/* tagline + Overview/Index toggle, anchored bottom */}
       <div className="container-edge pointer-events-none absolute inset-x-0 bottom-4 z-30 flex flex-col items-stretch gap-3 md:bottom-10 md:flex-row md:items-end md:justify-between md:gap-8">
-        <motion.p
-          className="hidden max-w-md text-[12px] leading-snug text-accent md:block md:text-[13px]"
-          initial={{ opacity: 0, y: 8 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1.0, ease: [0.16, 1, 0.3, 1], delay: 0.4 }}
+        <p
+          className="hidden max-w-md text-[12px] leading-snug animate-rise-in md:block md:text-[13px]"
+          style={{ color: ACCENT, animationDelay: "400ms" }}
         >
           {TAGLINE}
-        </motion.p>
+        </p>
 
-        <motion.div
-          className="pointer-events-auto flex items-center justify-end gap-3 leading-none"
-          style={{ fontSize: 14 }}
-          initial={{ opacity: 0, y: 8 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1.0, ease: [0.16, 1, 0.3, 1], delay: 0.5 }}
+        <div
+          className="pointer-events-auto flex items-center justify-end gap-3 leading-none animate-rise-in"
+          style={{ fontSize: 14, animationDelay: "500ms" }}
         >
           <ToggleBtn active={mode === "overview"} onClick={() => setMode("overview")}>
             Overview
           </ToggleBtn>
-          <span style={{ color: ACCENT, opacity: 0.5 }}>/</span>
+          <span style={{ color: ACCENT, opacity: 0.5 }} aria-hidden>/</span>
           <ToggleBtn active={mode === "index"} onClick={() => setMode("index")}>
             Index
           </ToggleBtn>
-        </motion.div>
+        </div>
       </div>
     </div>
   );
@@ -86,9 +89,10 @@ function ToggleBtn({
     <button
       type="button"
       onClick={onClick}
+      aria-pressed={active}
       style={{ color: ACCENT }}
       className={cn(
-        "leading-none transition-opacity duration-200 hover:underline focus:underline focus:outline-none",
+        "leading-none transition-opacity duration-200 hover:underline focus-visible:outline-none focus-visible:underline",
         active
           ? "underline underline-offset-4"
           : "opacity-80 hover:opacity-100",

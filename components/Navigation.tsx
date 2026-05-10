@@ -16,9 +16,9 @@ export function Navigation() {
   const { view, setView } = useView();
 
   return (
-    <header className="fixed inset-x-0 top-0 z-[70]">
+    <header className="fixed inset-x-0 top-0 z-[70]" role="banner">
       <div className="container-edge flex items-start justify-between gap-4 pt-5 md:pt-6">
-        <nav>
+        <nav aria-label="Primary">
           <ul className="flex flex-wrap items-baseline gap-x-5 gap-y-2">
             {TABS.map((tab) => {
               const isActive = view === tab.id;
@@ -28,17 +28,20 @@ export function Navigation() {
                   <button
                     type="button"
                     onClick={() => setView(tab.id)}
+                    aria-current={isActive ? "page" : undefined}
                     style={{ color: ACCENT, fontSize: 14 }}
                     className={cn(
-                      "whitespace-nowrap leading-none transition-opacity duration-200 hover:underline focus:underline focus:outline-none",
-                      isActive ? "underline underline-offset-4" : "opacity-80 hover:opacity-100",
+                      "whitespace-nowrap leading-none transition-opacity duration-200 hover:underline focus-visible:outline-none focus-visible:underline",
+                      isActive
+                        ? "underline underline-offset-4"
+                        : "opacity-80 hover:opacity-100",
                     )}
                   >
                     {isBrandTab ? (
                       <span>
                         {site.brandMark}
                         <span className="hidden sm:inline">
-                          <span className="px-1.5 opacity-60">·</span>
+                          <span className="px-1.5 opacity-60" aria-hidden>·</span>
                           {tab.label}
                         </span>
                       </span>

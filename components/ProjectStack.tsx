@@ -7,11 +7,11 @@ import {
   useRef,
   useState,
 } from "react";
-import Image from "next/image";
 import { stackPlates } from "@/lib/projects";
 import { prefersReducedMotion } from "@/lib/utils";
 import { useView } from "@/lib/view-context";
 import { useBreakpoint, type Breakpoint } from "@/lib/use-breakpoint";
+import { Img } from "@/components/Img";
 
 const PLATES = stackPlates;
 
@@ -41,7 +41,6 @@ function plateStyle(offset: number, geom: Geom): React.CSSProperties {
     };
   }
   const o = Math.abs(offset);
-  // Drop very-far cards entirely — they never read on screen and hurt perf.
   if (o > 4) {
     return { opacity: 0, transform: "translateZ(-1500px)", zIndex: 0 };
   }
@@ -72,7 +71,6 @@ export function ProjectStack() {
   const advance = useCallback(
     (dir: 1 | -1) => {
       const now = performance.now();
-      // Debounce wheel/swipe so a single gesture moves by one record.
       if (now - lastInputRef.current < 280) return;
       lastInputRef.current = now;
       setActive((a) => Math.max(0, Math.min(total - 1, a + dir)));
@@ -93,9 +91,7 @@ export function ProjectStack() {
     const onKey = (e: KeyboardEvent) => {
       if (["ArrowRight", "ArrowDown", "PageDown", " "].includes(e.key)) {
         advance(1);
-      } else if (
-        ["ArrowLeft", "ArrowUp", "PageUp"].includes(e.key)
-      ) {
+      } else if (["ArrowLeft", "ArrowUp", "PageUp"].includes(e.key)) {
         advance(-1);
       } else if (e.key === "Home") {
         setActive(0);
@@ -146,6 +142,8 @@ export function ProjectStack() {
     <div
       ref={wrapperRef}
       className="absolute inset-0 grid place-items-center select-none"
+      role="region"
+      aria-label="Project carousel — use left and right arrow keys to browse"
       style={{
         perspective: `${geom.perspective}px`,
         perspectiveOrigin: "50% 55%",
@@ -185,7 +183,7 @@ export function ProjectStack() {
               }
               tabIndex={isActive ? 0 : -1}
               aria-hidden={!isVisible}
-              className="group absolute inset-0 block"
+              className="group absolute inset-0 block focus-visible:outline-none"
               style={{
                 ...plateStyle(offset, geom),
                 transition:
@@ -196,14 +194,13 @@ export function ProjectStack() {
               }}
             >
               <div className="relative h-full w-full overflow-hidden bg-paper-300 shadow-[0_30px_50px_-25px_rgba(20,16,10,0.55)] ring-1 ring-ink/5">
-                <Image
-                  src={p.src}
+                <Img
+                  image={p.image}
                   alt={p.projectTitle}
-                  fill
-                  unoptimized
-                  sizes="(max-width:768px) 60vw, (max-width:1024px) 38vw, 30vw"
-                  className="object-cover"
-                  priority={Math.abs(offset) <= 1}
+                  sizes="(min-width: 1024px) 380px, (min-width: 768px) 320px, 220px"
+                  priority={i === 0}
+                  loading={Math.abs(offset) <= 1 ? "eager" : "lazy"}
+                  className="h-full w-full object-cover"
                 />
               </div>
             </button>

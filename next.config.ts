@@ -14,6 +14,8 @@ const nextConfig: NextConfig = {
   output: "export",
   trailingSlash: true,
   reactStrictMode: true,
+  productionBrowserSourceMaps: false,
+  poweredByHeader: false,
   images: {
     unoptimized: true,
   },
@@ -22,8 +24,10 @@ const nextConfig: NextConfig = {
   env: {
     NEXT_PUBLIC_BASE_PATH: basePath,
   },
-  experimental: {
-    optimizePackageImports: ["framer-motion", "gsap"],
+  compiler: {
+    // Strip console.log in production builds. Keep error/warn so
+    // genuine failures still surface in browser DevTools.
+    removeConsole: { exclude: ["error", "warn"] },
   },
 };
 

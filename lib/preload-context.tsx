@@ -8,7 +8,7 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import { plates, references } from "@/lib/projects";
+import { stackPlates } from "@/lib/projects";
 
 type Ctx = {
   /** 0..1 — fraction of asset bytes/items finished. */
@@ -20,23 +20,21 @@ type Ctx = {
 const PreloadCtx = createContext<Ctx>({ progress: 0, ready: false });
 
 /**
- * Eager image preloader. We collect every image URL referenced by the
- * project list and resolve only when each one finishes (success or
- * error — we never want to deadlock the loader on a 404).
+ * Eager preloader for the *visible* hero only — the 12 stack plates at
+ * their 800w variant. Everything else (References thumbs, gallery
+ * images inside the project detail panel) lazy-loads on demand, which
+ * keeps the loader gate fast even on slow mobile internet.
  *
- * The loader itself reads from this context and reveals the rest of
- * the app only when `ready` flips true, so the first-paint experience
- * stays cinematic even on slow networks.
+ * The watchdog caps the gate at 6s so a single hung asset can't trap
+ * the user behind a blank screen.
  */
 export function PreloadProvider({ children }: { children: ReactNode }) {
   const [progress, setProgress] = useState(0);
   const [ready, setReady] = useState(false);
 
-  // Collect once.
   const urls = useMemo(() => {
     const seen = new Set<string>();
-    for (const p of plates) if (p.src) seen.add(p.src);
-    for (const r of references) if (r.src) seen.add(r.src);
+    for (const p of stackPlates) seen.add(p.image.src);
     return [...seen];
   }, []);
 
@@ -51,19 +49,17 @@ export function PreloadProvider({ children }: { children: ReactNode }) {
     let done = 0;
     let cancelled = false;
     const total = urls.length;
-    // Floor so we never display more than 99% before ready flips.
     const tick = () => {
       done += 1;
       if (cancelled) return;
       setProgress(done / total);
       if (done >= total) {
-        // Tiny grace so the bar reaches 100 before the loader exits.
-        setTimeout(() => !cancelled && setReady(true), 250);
+        setTimeout(() => !cancelled && setReady(true), 150);
       }
     };
 
     const start = performance.now();
-    const MAX_MS = 12_000; // hard cap so a single hung asset can't hold the gate
+    const MAX_MS = 6_000;
 
     urls.forEach((src) => {
       const img = new window.Image();

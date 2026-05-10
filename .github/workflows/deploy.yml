@@ -51,6 +51,11 @@ jobs:
       - name: Build
         env:
           NEXT_PUBLIC_BASE_PATH: ${{ steps.basepath.outputs.value }}
+          # Optional. Set NEXT_PUBLIC_GA_ID as a repository variable
+          # (Settings → Secrets and variables → Actions → Variables)
+          # in the form `G-XXXXXXX`. Without it, no GA snippet is
+          # injected and no third-party JS is requested.
+          NEXT_PUBLIC_GA_ID: ${{ vars.NEXT_PUBLIC_GA_ID }}
         run: npm run build
 
       - name: Add .nojekyll

@@ -27,10 +27,8 @@ export function ProjectIndex() {
               <button
                 type="button"
                 onClick={() => openProject(p.id)}
-                data-cursor="view"
-                data-cursor-label="Open"
                 aria-label={`Open ${p.title}`}
-                className="group grid w-full grid-cols-12 items-baseline gap-3 py-4 text-left transition-colors duration-300 hover:bg-ink/[0.04]"
+                className="group grid w-full grid-cols-12 items-baseline gap-3 py-4 text-left transition-colors duration-300 hover:bg-ink/[0.04] focus-visible:bg-ink/[0.06] focus-visible:outline-none"
               >
                 <span className="col-span-1 font-mono text-micro tracking-[0.18em] text-ink/45">
                   {p.index}
@@ -44,7 +42,10 @@ export function ProjectIndex() {
                 <span className="col-span-1 text-right font-mono text-micro text-ink/55">
                   {p.year}
                 </span>
-                <span className="col-span-1 text-right font-mono text-micro text-ink/35 transition-all duration-300 group-hover:translate-x-1 group-hover:text-ink">
+                <span
+                  aria-hidden
+                  className="col-span-1 text-right font-mono text-micro text-ink/35 transition-all duration-300 group-hover:translate-x-1 group-hover:text-ink"
+                >
                   →
                 </span>
               </button>

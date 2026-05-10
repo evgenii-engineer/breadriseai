@@ -8,8 +8,15 @@ export const site = {
   brandMark: "Bread Rise",
   domain: "breadriseai.com",
   description:
-    "Cinematic moments, made with AI. Direction, editorial and visual identity for fashion, culture and forward-thinking brands.",
+    "Bread Rise is an AI-native creative studio in Lisbon. Cinematic editorial direction, fashion imagery and visual identity for forward-thinking brands.",
+  /** Used as the SEO meta description and the OG description. */
+  shortDescription:
+    "AI-native creative studio in Lisbon. Cinematic direction, editorial and visual identity.",
   location: "Lisbon",
+  /** Light theme color used in <meta name="theme-color">. Matches --bg. */
+  themeColor: "#ffffff",
+  /** Brand accent. Used by the favicon SVG and PWA icon mask. */
+  accent: "#0645AD",
   social: [
     { label: "Instagram", href: "https://www.instagram.com/breadrise_ai" },
     { label: "TikTok", href: "https://www.tiktok.com/@breadrise_ai" },
