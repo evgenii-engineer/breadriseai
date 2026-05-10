@@ -206,7 +206,20 @@ export const projects: Project[] = [
       "Creative concept reels",
       "AI fashion campaigns",
     ],
-    gallery: [],
+    gallery: [
+      img("my-body-made-of-petals", "petals-01"),
+      img("my-body-made-of-petals", "petals-02"),
+      img("my-body-made-of-petals", "petals-03"),
+      img("my-body-made-of-petals", "petals-04"),
+      img("my-body-made-of-petals", "petals-05"),
+      img("my-body-made-of-petals", "petals-06"),
+      img("my-body-made-of-petals", "petals-07"),
+      img("my-body-made-of-petals", "petals-08"),
+      img("my-body-made-of-petals", "petals-09"),
+      img("my-body-made-of-petals", "petals-10"),
+      img("my-body-made-of-petals", "petals-11"),
+      img("my-body-made-of-petals", "petals-12"),
+    ],
   },
 ];
 
