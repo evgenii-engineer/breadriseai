@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { usePreload } from "@/lib/preload-context";
 
 const ACCENT = "#0645AD";
@@ -16,6 +16,11 @@ export function LoadingScreen() {
   const [hidden, setHidden] = useState(false);
   const [exiting, setExiting] = useState(false);
   const [displayed, setDisplayed] = useState(0);
+  // Timer + guard live in refs so they survive re-renders and the
+  // effect that schedules them can't accidentally cancel itself when
+  // `exiting`/`displayed` change immediately after.
+  const exitTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const exitScheduledRef = useRef(false);
 
   useEffect(() => {
     if (typeof document === "undefined") return;
@@ -40,12 +45,16 @@ export function LoadingScreen() {
   }, [progress, ready]);
 
   useEffect(() => {
-    if (ready && displayed >= 0.999 && !exiting) {
-      setExiting(true);
-      const t = setTimeout(() => setHidden(true), 700);
-      return () => clearTimeout(t);
-    }
-  }, [ready, displayed, exiting]);
+    if (!ready || displayed < 0.999 || exitScheduledRef.current) return;
+    exitScheduledRef.current = true;
+    setExiting(true);
+    exitTimerRef.current = setTimeout(() => setHidden(true), 700);
+  }, [ready, displayed]);
+
+  // Final teardown if the component is removed before the timer fires.
+  useEffect(() => () => {
+    if (exitTimerRef.current) clearTimeout(exitTimerRef.current);
+  }, []);
 
   if (hidden) return null;
 
