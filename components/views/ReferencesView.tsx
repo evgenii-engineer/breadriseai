@@ -25,27 +25,24 @@ export function ReferencesView() {
   const isSmall = bp === "sm";
 
   const cluster = useMemo(() => {
-    // Cluster all plates radially around the viewport centre, like
-    // a desktop covered in shortcut icons. Polar coordinates keep
-    // them circling the middle without falling into a grid.
-    const minR = isSmall ? 80 : 110;
-    const maxR = isSmall ? 220 : 480;
-    const widthMin = isSmall ? 56 : 76;
-    const widthVar = isSmall ? 22 : 30;
+    // Phyllotaxis (sunflower seed) spiral: angle steps by the golden
+    // angle ≈ 137.5°, radius grows as sqrt(i). Gives evenly distributed
+    // points across the disk with no clumping at any radius.
+    const goldenAngle = Math.PI * (3 - Math.sqrt(5));
+    const c = isSmall ? 38 : 78;          // spiral spacing constant
+    const minR = isSmall ? 48 : 88;       // radius for the very first plate
+    const widthMin = isSmall ? 56 : 78;
+    const widthVar = isSmall ? 18 : 22;
 
     return allReferencePlates.map((p, i) => {
       const r1 = rand(i + 1, 17);
       const r2 = rand(i + 1, 31);
-      const r3 = rand(i + 1, 53);
 
-      // Spread the angle so consecutive plates don't bunch on one side.
-      const angle = (i * 0.618033988749 + r1) * Math.PI * 2;
-      // Square-root mapping pushes density outward instead of all
-      // hugging the centre.
-      const radius = minR + Math.sqrt(r2) * (maxR - minR);
+      const angle = i * goldenAngle + r1 * 0.25;          // tiny angular jitter
+      const radius = minR + c * Math.sqrt(i);
       const tx = Math.cos(angle) * radius;
       const ty = Math.sin(angle) * radius;
-      const widthPx = Math.round(widthMin + r3 * widthVar);
+      const widthPx = Math.round(widthMin + r2 * widthVar);
 
       return { ...p, tx, ty, widthPx };
     });
