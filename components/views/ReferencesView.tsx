@@ -1,13 +1,19 @@
 "use client";
 
+import { useMemo } from "react";
 import { motion } from "framer-motion";
 import { allReferencePlates } from "@/lib/projects";
 import { useView } from "@/lib/view-context";
+import { useBreakpoint } from "@/lib/use-breakpoint";
 
 const ACCENT = "#0645AD";
 
-/** Pull the bare filename out of an asset URL so we can display it
- *  Finder-style under each thumbnail. */
+/** Tiny deterministic pseudo-random for stable per-plate placement. */
+function rand(seed: number, salt: number) {
+  const x = (seed * 9301 + salt * 49297 + 233280) % 233280;
+  return x / 233280;
+}
+
 function fileNameFor(url: string) {
   const slash = url.lastIndexOf("/");
   return slash >= 0 ? url.slice(slash + 1) : url;
@@ -15,10 +21,39 @@ function fileNameFor(url: string) {
 
 export function ReferencesView() {
   const { openProject } = useView();
+  const bp = useBreakpoint();
+  const isSmall = bp === "sm";
+
+  const cluster = useMemo(() => {
+    // Cluster all plates radially around the viewport centre, like
+    // a desktop covered in shortcut icons. Polar coordinates keep
+    // them circling the middle without falling into a grid.
+    const minR = isSmall ? 80 : 110;
+    const maxR = isSmall ? 220 : 480;
+    const widthMin = isSmall ? 56 : 76;
+    const widthVar = isSmall ? 22 : 30;
+
+    return allReferencePlates.map((p, i) => {
+      const r1 = rand(i + 1, 17);
+      const r2 = rand(i + 1, 31);
+      const r3 = rand(i + 1, 53);
+
+      // Spread the angle so consecutive plates don't bunch on one side.
+      const angle = (i * 0.618033988749 + r1) * Math.PI * 2;
+      // Square-root mapping pushes density outward instead of all
+      // hugging the centre.
+      const radius = minR + Math.sqrt(r2) * (maxR - minR);
+      const tx = Math.cos(angle) * radius;
+      const ty = Math.sin(angle) * radius;
+      const widthPx = Math.round(widthMin + r3 * widthVar);
+
+      return { ...p, tx, ty, widthPx };
+    });
+  }, [isSmall]);
 
   return (
-    <div className="absolute inset-0 overflow-y-auto overflow-x-hidden bg-white pt-24 pb-16 md:pt-28 md:pb-20">
-      <div className="container-edge mb-6">
+    <div className="absolute inset-0 overflow-hidden bg-white">
+      <div className="container-edge absolute inset-x-0 top-24 z-20 md:top-28">
         <span
           className="block leading-none"
           style={{ fontSize: 14, color: ACCENT }}
@@ -27,60 +62,53 @@ export function ReferencesView() {
         </span>
       </div>
 
-      <div
-        className="mx-auto px-4 md:px-8"
-        style={{ maxWidth: "min(1700px, 100%)" }}
-      >
-        <div
-          className="grid items-start"
-          style={{
-            gridTemplateColumns: "repeat(auto-fill, minmax(96px, 1fr))",
-            columnGap: "12px",
-            rowGap: "22px",
-          }}
-        >
-          {allReferencePlates.map((p, i) => {
-            const fn = fileNameFor(p.src);
-            return (
-              <motion.button
-                key={p.key}
-                type="button"
-                initial={{ opacity: 0, y: 8 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{
-                  duration: 0.55,
-                  ease: [0.16, 1, 0.3, 1],
-                  delay: 0.025 * (i % 16),
+      {/* radial cluster anchored to the centre of the viewport */}
+      <div className="absolute left-1/2 top-1/2 h-0 w-0">
+        {cluster.map((p, i) => {
+          const fn = fileNameFor(p.src);
+          return (
+            <motion.button
+              key={p.key}
+              type="button"
+              initial={{ opacity: 0, scale: 0.85 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{
+                duration: 0.7,
+                ease: [0.16, 1, 0.3, 1],
+                delay: 0.025 * (i % 16),
+              }}
+              onClick={() => openProject(p.projectId)}
+              aria-label={`Open ${p.projectTitle}`}
+              className="group absolute left-0 top-0 flex flex-col items-center gap-1.5 rounded-md p-1.5 text-center transition-colors duration-200 hover:bg-ink/[0.05] focus:bg-ink/[0.08] focus:outline-none"
+              style={{
+                width: p.widthPx,
+                transform: `translate(${p.tx}px, ${p.ty}px) translate(-50%, -50%)`,
+              }}
+            >
+              <div className="relative aspect-[3/4] w-full overflow-hidden bg-paper-200">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={p.src}
+                  alt={p.projectTitle}
+                  loading={i < 12 ? "eager" : "lazy"}
+                  decoding="async"
+                  className="h-full w-full object-cover"
+                />
+              </div>
+              <span
+                className="block w-full break-all text-[10px] leading-[1.2] text-ink/80 group-hover:text-ink"
+                style={{
+                  display: "-webkit-box",
+                  WebkitLineClamp: 2,
+                  WebkitBoxOrient: "vertical",
+                  overflow: "hidden",
                 }}
-                onClick={() => openProject(p.projectId)}
-                aria-label={`Open ${p.projectTitle}`}
-                className="group flex flex-col items-center gap-1.5 rounded-md p-1.5 text-center transition-colors duration-200 hover:bg-ink/[0.05] focus:bg-ink/[0.08] focus:outline-none"
               >
-                <div className="relative aspect-[3/4] w-full overflow-hidden bg-paper-200">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={p.src}
-                    alt={p.projectTitle}
-                    loading={i < 12 ? "eager" : "lazy"}
-                    decoding="async"
-                    className="h-full w-full object-cover"
-                  />
-                </div>
-                <span
-                  className="block w-full break-all text-[10px] leading-[1.2] text-ink/80 group-hover:text-ink"
-                  style={{
-                    display: "-webkit-box",
-                    WebkitLineClamp: 2,
-                    WebkitBoxOrient: "vertical",
-                    overflow: "hidden",
-                  }}
-                >
-                  {fn}
-                </span>
-              </motion.button>
-            );
-          })}
-        </div>
+                {fn}
+              </span>
+            </motion.button>
+          );
+        })}
       </div>
     </div>
   );
