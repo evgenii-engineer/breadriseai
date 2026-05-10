@@ -14,6 +14,10 @@ export type Project = {
   client?: string;
   year: number;
   discipline: string[];
+  /** Service tags shown on the project detail page. */
+  services?: string[];
+  /** Long-form description shown on the project detail page. */
+  description?: string;
   /** First image is also used as the cover/headline plate. */
   gallery: string[];
 };
@@ -28,6 +32,16 @@ export const projects: Project[] = [
     client: "—",
     year: 2026,
     discipline: ["AI Production", "Editorial"],
+    services: [
+      "AI Editorial Production",
+      "Creative Direction",
+      "Visual Identity Systems",
+      "Casting & Character Design",
+      "Art Direction",
+      "Digital Fashion Imagery",
+    ],
+    description:
+      "“Women Are Beautiful” is an AI editorial study of femininity, age, and presence. The project rejects conventional beauty narratives in favor of raw elegance, emotional texture, and hyperreal visual storytelling.\n\nBuilt through AI production and editorial direction, the series transforms mature beauty into a striking visual statement, where skin, movement, vulnerability, and strength become the narrative itself. The result exists somewhere between luxury campaign imagery and synthetic documentation.",
     gallery: [
       m("women-are-beautiful", "IMG_3393.webp"),
       m("women-are-beautiful", "IMG_3392.webp"),
@@ -70,6 +84,16 @@ export const projects: Project[] = [
     client: "—",
     year: 2026,
     discipline: ["AI Production", "Visual Identity"],
+    services: [
+      "AI Visual Production",
+      "Beauty Art Direction",
+      "Concept Development",
+      "Editorial Image Systems",
+      "Texture & Surface Research",
+      "Digital Beauty Campaigns",
+    ],
+    description:
+      "“Wet” explores the visual tension between intimacy, gloss, and artificial perfection. Through hyper-detailed AI imagery, the project transforms moisture, skin, reflection, and bodily texture into a controlled visual language suspended between beauty campaign and sensory study.\n\nRather than documenting the body naturally, the series exaggerates surface, shine, and physical detail until the images begin to feel almost synthetic: seductive, clinical, and emotionally distant at the same time. Every frame focuses on texture as identity: wet skin, breath, gloss, saliva, light.",
     gallery: [
       m("wet", "IMG_3948.webp"),
       m("wet", "IMG_3958.webp"),
@@ -87,6 +111,15 @@ export const projects: Project[] = [
     client: "—",
     year: 2026,
     discipline: ["AI Production", "Editorial", "Direction"],
+    services: [
+      "AI Visual Production",
+      "Beauty Art Direction",
+      "Concept Development",
+      "Editorial Image Systems",
+      "Texture & Surface Research",
+      "Digital Beauty Campaigns",
+    ],
+    // description for man-accessories not provided in the brief yet
     gallery: [
       m("man-accessories", "IMG_2966.webp"),
       m("man-accessories", "IMG_2980.webp"),

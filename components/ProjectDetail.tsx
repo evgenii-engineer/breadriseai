@@ -5,12 +5,8 @@ import { AnimatePresence, motion } from "framer-motion";
 import { projects, type Project } from "@/lib/projects";
 import { useView } from "@/lib/view-context";
 
-/**
- * Project detail panel.
- * Pinterest-style masonry of every photo in the project. No rotation,
- * no swipe gestures — just a tight vertical column flow that lets
- * each photo keep its natural aspect ratio.
- */
+const ACCENT = "#0645AD";
+
 export function ProjectDetail() {
   const { selectedProject, closeProject } = useView();
   const project: Project | undefined = projects.find(
@@ -57,7 +53,7 @@ function DetailPanel({
 
   return (
     <motion.div
-      className="fixed inset-0 z-[90] bg-paper text-ink"
+      className="fixed inset-0 z-[90] bg-white text-ink"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
@@ -65,80 +61,116 @@ function DetailPanel({
       role="dialog"
       aria-modal="true"
     >
-      {/* top bar */}
-      <div className="container-edge fixed inset-x-0 top-0 z-20 flex items-start justify-between gap-3 bg-gradient-to-b from-paper via-paper/85 to-transparent pt-4 pb-8 md:gap-6 md:pt-6 md:pb-10">
-        <div className="min-w-0">
-          <span className="font-mono text-[10px] uppercase tracking-[0.22em] text-ink/55 md:text-micro">
-            {project.index} · {project.year} · {project.gallery.length} photos
-          </span>
+      {/* sticky close button only — the rest of the header scrolls
+          with the page so the layout matches the brief mockup */}
+      <button
+        type="button"
+        onClick={onClose}
+        aria-label="Close project"
+        className="fixed right-6 top-5 z-30 rounded-full border border-ink/25 bg-white px-3 py-1.5 text-[11px] uppercase tracking-[0.22em] text-ink transition-colors duration-300 hover:border-ink/85 md:right-10 md:top-6 md:px-4 md:py-2 md:text-[12px]"
+      >
+        <span className="md:hidden">✕</span>
+        <span className="hidden md:inline">Close ✕</span>
+      </button>
+
+      <div className="absolute inset-0 overflow-y-auto overflow-x-hidden">
+        <div
+          className="mx-auto px-6 pb-20 pt-16 md:px-10 md:pb-28 md:pt-20"
+          style={{ maxWidth: "min(1600px, 100%)" }}
+        >
+          {/* page header */}
+          <div className="flex items-baseline gap-3 text-[11px] uppercase tracking-[0.22em] text-ink/55 md:text-[12px]">
+            <span>{project.index}</span>
+            <span className="text-ink/30">·</span>
+            <span>{project.year}</span>
+            <span className="text-ink/30">·</span>
+            <span>{project.gallery.length} photos</span>
+          </div>
+
           <motion.h2
-            className="mt-1.5 truncate leading-[0.95] tracking-tightest md:mt-2"
-            style={{ fontSize: "clamp(1.4rem, 4.2vw, 3.75rem)" }}
+            className="mt-2 leading-[0.95] tracking-tightest"
+            style={{
+              fontSize: "clamp(2rem, 6vw, 5rem)",
+              color: ACCENT,
+            }}
             initial={{ y: 24, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
           >
             {project.title}
           </motion.h2>
-          <span className="mt-1.5 inline-block truncate font-mono text-[9px] uppercase tracking-[0.2em] text-ink/50 md:mt-2 md:text-micro">
-            {project.discipline.join(" · ")}
-          </span>
-        </div>
-        <button
-          type="button"
-          onClick={onClose}
-          data-cursor="hover"
-          aria-label="Close project"
-          className="shrink-0 rounded-full border border-ink/25 px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.22em] text-ink transition-colors duration-300 hover:border-ink/85 md:px-4 md:py-2 md:text-micro"
-        >
-          <span className="md:hidden">✕</span>
-          <span className="hidden md:inline">Close ✕</span>
-        </button>
-      </div>
 
-      {/* masonry */}
-      <div className="absolute inset-0 overflow-y-auto overflow-x-hidden pt-28 pb-16 md:pt-36 md:pb-20">
-        <div
-          className="mx-auto px-4 md:px-8"
-          style={{ maxWidth: "min(1500px, 100%)" }}
-        >
-          <div className="columns-2 gap-2 sm:columns-3 md:gap-3 lg:columns-4 lg:gap-4">
-            {project.gallery.map((src, i) => (
-              <motion.figure
-                key={src}
-                initial={{ opacity: 0, y: 12 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{
-                  duration: 0.7,
-                  ease: [0.16, 1, 0.3, 1],
-                  delay: 0.04 * (i % 10),
-                }}
-                className="mb-2 break-inside-avoid md:mb-3 lg:mb-4"
-              >
-                {/*
-                  Native <img> here — the masonry needs each photo's
-                  natural aspect to drive its rendered height, and
-                  Next/Image with `fill` would blow that up.
-                */}
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={src}
-                  alt={`${project.title} — ${i + 1}`}
-                  loading={i < 4 ? "eager" : "lazy"}
-                  decoding="async"
-                  data-cursor="hover"
-                  className="block w-full bg-paper-300 ring-1 ring-ink/5 transition-transform duration-500 ease-out hover:-translate-y-0.5"
-                />
-              </motion.figure>
-            ))}
+          {/* services + description */}
+          {(project.services?.length || project.description) && (
+            <div className="mt-10 grid grid-cols-1 gap-y-8 md:mt-14 md:grid-cols-12 md:gap-x-10">
+              {project.services?.length ? (
+                <div className="md:col-span-4">
+                  <span
+                    className="block text-[13px] leading-tight"
+                    style={{ color: ACCENT }}
+                  >
+                    Services
+                  </span>
+                  <ul className="mt-3 space-y-1 text-[14px] leading-snug text-ink/85 md:text-[15px]">
+                    {project.services.map((s) => (
+                      <li key={s}>{s}</li>
+                    ))}
+                  </ul>
+                </div>
+              ) : null}
+
+              {project.description ? (
+                <div className="md:col-span-8">
+                  <span
+                    className="block text-[13px] leading-tight"
+                    style={{ color: ACCENT }}
+                  >
+                    Description
+                  </span>
+                  <div className="mt-3 max-w-2xl space-y-4 text-[14px] leading-relaxed text-ink/85 md:text-[15px]">
+                    {project.description.split("\n\n").map((para, i) => (
+                      <p key={i}>{para}</p>
+                    ))}
+                  </div>
+                </div>
+              ) : null}
+            </div>
+          )}
+
+          {/* photo masonry */}
+          <div className="mt-14 md:mt-20">
+            <div className="columns-2 gap-2 sm:columns-3 md:gap-3 lg:columns-4 lg:gap-4">
+              {project.gallery.map((src, i) => (
+                <motion.figure
+                  key={src}
+                  initial={{ opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{
+                    duration: 0.7,
+                    ease: [0.16, 1, 0.3, 1],
+                    delay: 0.04 * (i % 10),
+                  }}
+                  className="mb-2 break-inside-avoid md:mb-3 lg:mb-4"
+                >
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={src}
+                    alt={`${project.title} — ${i + 1}`}
+                    loading={i < 4 ? "eager" : "lazy"}
+                    decoding="async"
+                    className="block w-full bg-paper-200 ring-1 ring-ink/5"
+                  />
+                </motion.figure>
+              ))}
+            </div>
+          </div>
+
+          {/* footer hint */}
+          <div className="mt-12 flex items-center justify-between text-[11px] uppercase tracking-[0.22em] text-ink/55 md:text-[12px]">
+            <span>{project.gallery.length} photos</span>
+            <span className="hidden md:inline">ESC to close</span>
           </div>
         </div>
-      </div>
-
-      {/* footer hint */}
-      <div className="container-edge pointer-events-none absolute inset-x-0 bottom-3 z-20 flex items-end justify-between gap-3 font-mono text-[10px] uppercase tracking-[0.22em] text-ink/55 md:bottom-7 md:text-micro">
-        <span>{project.gallery.length} photos · scroll</span>
-        <span className="hidden md:inline">ESC to close</span>
       </div>
     </motion.div>
   );
