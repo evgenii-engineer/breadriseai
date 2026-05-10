@@ -6,6 +6,7 @@ import { ProjectIndex } from "@/components/ProjectIndex";
 import { cn } from "@/lib/utils";
 import { useView } from "@/lib/view-context";
 
+const ACCENT = "#0645AD";
 const TAGLINE =
   "AI visuals, rare aesthetics, and visual identities engineered to make brands impossible to ignore";
 
@@ -53,7 +54,8 @@ export function ProjectsView() {
         </motion.p>
 
         <motion.div
-          className="pointer-events-auto flex items-center justify-end gap-1 text-[12px] text-ink/85 md:text-[13px]"
+          className="pointer-events-auto flex items-center justify-end gap-3 leading-none"
+          style={{ fontSize: 14 }}
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1.0, ease: [0.16, 1, 0.3, 1], delay: 0.5 }}
@@ -61,7 +63,7 @@ export function ProjectsView() {
           <ToggleBtn active={mode === "overview"} onClick={() => setMode("overview")}>
             Overview
           </ToggleBtn>
-          <span className="text-ink/30">/</span>
+          <span style={{ color: ACCENT, opacity: 0.5 }}>/</span>
           <ToggleBtn active={mode === "index"} onClick={() => setMode("index")}>
             Index
           </ToggleBtn>
@@ -84,9 +86,12 @@ function ToggleBtn({
     <button
       type="button"
       onClick={onClick}
+      style={{ color: ACCENT }}
       className={cn(
-        "px-2 py-1 transition-colors duration-300",
-        active ? "text-ink" : "text-ink/35 hover:text-ink/70",
+        "leading-none transition-opacity duration-200 hover:underline focus:underline focus:outline-none",
+        active
+          ? "underline underline-offset-4"
+          : "opacity-80 hover:opacity-100",
       )}
     >
       {children}
