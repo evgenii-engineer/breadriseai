@@ -87,6 +87,13 @@ third-party JS is requested.
    embeds the gtag snippet via `next/script strategy="afterInteractive"`,
    so it never blocks LCP.
 
+## GoatCounter
+
+Privacy-friendly, no-cookie analytics. The endpoint
+(`https://breadriseai.goatcounter.com/count`) is hardcoded in
+`components/Analytics.tsx` and `count.js` loads on every build via
+`next/script strategy="afterInteractive"`, so it never blocks LCP.
+
 ## Caching & security on GitHub Pages
 
 GitHub Pages serves through Fastly with sensible defaults:

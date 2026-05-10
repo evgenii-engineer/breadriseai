@@ -1,31 +1,38 @@
 import Script from "next/script";
 
+const GOATCOUNTER_URL = "https://breadriseai.goatcounter.com/count";
+
 /**
- * Google Analytics 4. Renders nothing — and does *not* request any
- * third-party JS — unless `NEXT_PUBLIC_GA_ID` is set at build time.
- *
- * Set it in CI (GitHub Actions secret, Cloudflare Pages env var,
- * `.env.local`, …). Format: `G-XXXXXXX`. Once present, the gtag.js
- * snippet loads with `strategy="afterInteractive"`, so it never
- * blocks LCP / FCP.
+ * Privacy-friendly analytics. GoatCounter loads on every build (no
+ * cookies, no PII). Google Analytics 4 only loads when
+ * `NEXT_PUBLIC_GA_ID` is set. Both load with
+ * `strategy="afterInteractive"`, so they never block LCP / FCP.
  */
 export function Analytics() {
-  const id = process.env.NEXT_PUBLIC_GA_ID;
-  if (!id) return null;
+  const gaId = process.env.NEXT_PUBLIC_GA_ID;
   return (
     <>
+      {gaId && (
+        <>
+          <Script
+            src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`}
+            strategy="afterInteractive"
+          />
+          <Script id="ga4-init" strategy="afterInteractive">
+            {`
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', '${gaId}', { anonymize_ip: true });
+            `}
+          </Script>
+        </>
+      )}
       <Script
-        src={`https://www.googletagmanager.com/gtag/js?id=${id}`}
+        src="https://gc.zgo.at/count.js"
+        data-goatcounter={GOATCOUNTER_URL}
         strategy="afterInteractive"
       />
-      <Script id="ga4-init" strategy="afterInteractive">
-        {`
-          window.dataLayer = window.dataLayer || [];
-          function gtag(){dataLayer.push(arguments);}
-          gtag('js', new Date());
-          gtag('config', '${id}', { anonymize_ip: true });
-        `}
-      </Script>
     </>
   );
 }
