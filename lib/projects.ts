@@ -16,8 +16,12 @@ export type Project = {
   discipline: string[];
   /** Service tags shown on the project detail page. */
   services?: string[];
-  /** Long-form description shown on the project detail page. */
+  /** Long-form description. Use \n\n between paragraphs. */
   description?: string;
+  /** Optional bullet list rendered under "Visual signatures". */
+  visualSignatures?: string[];
+  /** Optional bullet list rendered under "Designed for". */
+  designedFor?: string[];
   /** First image is also used as the cover/headline plate. */
   gallery: string[];
 };
@@ -61,6 +65,17 @@ export const projects: Project[] = [
     client: "—",
     year: 2026,
     discipline: ["AI Production", "Direction", "Fashion"],
+    services: [
+      "AI Fashion Production",
+      "Wearable Concept Design",
+      "Creative Direction",
+      "Movement Research",
+      "Performance Styling",
+      "Visual Campaign Development",
+      "Fashion Narrative Systems",
+    ],
+    description:
+      "“Runway Training” reimagines fashion through physical discipline and constructed beauty. Combining AI-generated fashion imagery with athletic environments, the project reframes the language of luxury fashion into a sweat-soaked, focused, and constantly observed.\n\nThe series merges gym culture with runway aesthetics, where strength becomes choreography and exhaustion turns into styling. Through exaggerated poses, athletic gear, hyperreal body language, the work examines how contemporary femininity is shaped through performance, pressure, and visibility.",
     gallery: [
       m("runway-training", "IMG_4065.webp"),
       m("runway-training", "IMG_4072.webp"),
@@ -119,7 +134,8 @@ export const projects: Project[] = [
       "Texture & Surface Research",
       "Digital Beauty Campaigns",
     ],
-    // description for man-accessories not provided in the brief yet
+    description:
+      "“Man Accessories” explores masculinity through restriction, ornament, and engineered identity. Using AI-generated editorial imagery, the project transforms metallic and architectural elements into the construction of the body, suspended between fashion accessory, protective armor, and invasive object.\n\nRather than functioning as wearable products, the pieces operate as visual statements: aggressive yet elegant, mechanical yet intimate. The series examines how masculinity can be constructed, exaggerated, and aestheticized through artificial design language and hyper-controlled imagery.",
     gallery: [
       m("man-accessories", "IMG_2966.webp"),
       m("man-accessories", "IMG_2980.webp"),
@@ -129,16 +145,55 @@ export const projects: Project[] = [
       m("man-accessories", "IMG_2997.webp"),
     ],
   },
+  {
+    id: "my-body-made-of-petals",
+    index: "05",
+    title: "My Body Made of Petals",
+    client: "—",
+    year: 2026,
+    discipline: ["AI Production", "Editorial", "Fine Art"],
+    services: [
+      "Creative Direction",
+      "AI Fashion Image Creation",
+      "AI Fashion Video / Motion",
+      "Visual Identity for Fashion & Beauty Brands",
+      "Art Direction for Social Media",
+    ],
+    description:
+      "My Body Made of Petals is a sensual high-fashion visual series exploring the transformation of the human body into living floral sculpture. Inspired by Vogue beauty editorials, luxury perfume campaigns, and contemporary body art photography, the project merges glossy skin, sculptural posing, and well flower petals into cinematic compositions.\n\nThe body becomes a canvas covered in luminous petals with an almost liquid texture: soft, reflective, organic, and surreal. Every frame is built around macro body details, dramatic studio lighting, rich black backgrounds, and couture-inspired floral styling.\n\nThe project exists between fashion photography, beauty campaigns, and fine art.",
+    visualSignatures: [
+      "Glossy oil-like petals",
+      "Macro body compositions",
+      "Black seamless background",
+      "Cinematic studio light",
+      "Artificial light on skin",
+      "Sculptural feminine poses",
+      "Luxury Vogue-inspired aesthetic",
+      "Sensual but minimal visual language",
+      "Floral body couture",
+    ],
+    designedFor: [
+      "Fashion editorials",
+      "Perfume & skincare brands",
+      "Album covers",
+      "Luxury visual identities",
+      "Creative concept reels",
+      "AI fashion campaigns",
+    ],
+    gallery: [],
+  },
 ];
 
-/** Cover (first) image of every project. */
-export const covers = projects.map((p) => ({
-  id: p.id,
-  index: p.index,
-  title: p.title,
-  year: p.year,
-  src: p.gallery[0],
-}));
+/** Cover (first) image of every project that actually has photos. */
+export const covers = projects
+  .filter((p) => p.gallery.length > 0)
+  .map((p) => ({
+    id: p.id,
+    index: p.index,
+    title: p.title,
+    year: p.year,
+    src: p.gallery[0],
+  }));
 
 export type Plate = {
   key: string;
@@ -170,7 +225,7 @@ export const references: Plate[] = [];
 
 /**
  * 12 plates for the hero stack — distributed across all projects so
- * every project shows up.
+ * every project shows up at least once.
  */
 export const stackPlates: Plate[] = (() => {
   const out: Plate[] = [];

@@ -83,8 +83,12 @@ function DetailPanel({
             <span>{project.index}</span>
             <span className="text-ink/30">·</span>
             <span>{project.year}</span>
-            <span className="text-ink/30">·</span>
-            <span>{project.gallery.length} photos</span>
+            {project.gallery.length > 0 && (
+              <>
+                <span className="text-ink/30">·</span>
+                <span>{project.gallery.length} photos</span>
+              </>
+            )}
           </div>
 
           <motion.h2
@@ -137,37 +141,80 @@ function DetailPanel({
             </div>
           )}
 
-          {/* photo masonry */}
-          <div className="mt-14 md:mt-20">
-            <div className="columns-2 gap-2 sm:columns-3 md:gap-3 lg:columns-4 lg:gap-4">
-              {project.gallery.map((src, i) => (
-                <motion.figure
-                  key={src}
-                  initial={{ opacity: 0, y: 12 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{
-                    duration: 0.7,
-                    ease: [0.16, 1, 0.3, 1],
-                    delay: 0.04 * (i % 10),
-                  }}
-                  className="mb-2 break-inside-avoid md:mb-3 lg:mb-4"
-                >
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={src}
-                    alt={`${project.title} — ${i + 1}`}
-                    loading={i < 4 ? "eager" : "lazy"}
-                    decoding="async"
-                    className="block w-full bg-paper-200 ring-1 ring-ink/5"
-                  />
-                </motion.figure>
-              ))}
+          {/* visual signatures + designed for */}
+          {(project.visualSignatures?.length || project.designedFor?.length) && (
+            <div className="mt-10 grid grid-cols-1 gap-y-8 md:mt-14 md:grid-cols-12 md:gap-x-10">
+              {project.visualSignatures?.length ? (
+                <div className="md:col-span-6">
+                  <span
+                    className="block text-[13px] leading-tight"
+                    style={{ color: ACCENT }}
+                  >
+                    Visual signatures
+                  </span>
+                  <ul className="mt-3 space-y-1 text-[14px] leading-snug text-ink/85 md:text-[15px]">
+                    {project.visualSignatures.map((s) => (
+                      <li key={s}>— {s}</li>
+                    ))}
+                  </ul>
+                </div>
+              ) : null}
+
+              {project.designedFor?.length ? (
+                <div className="md:col-span-6">
+                  <span
+                    className="block text-[13px] leading-tight"
+                    style={{ color: ACCENT }}
+                  >
+                    Designed for
+                  </span>
+                  <ul className="mt-3 space-y-1 text-[14px] leading-snug text-ink/85 md:text-[15px]">
+                    {project.designedFor.map((s) => (
+                      <li key={s}>— {s}</li>
+                    ))}
+                  </ul>
+                </div>
+              ) : null}
             </div>
-          </div>
+          )}
+
+          {/* photo masonry */}
+          {project.gallery.length > 0 && (
+            <div className="mt-14 md:mt-20">
+              <div className="columns-2 gap-2 sm:columns-3 md:gap-3 lg:columns-4 lg:gap-4">
+                {project.gallery.map((src, i) => (
+                  <motion.figure
+                    key={src}
+                    initial={{ opacity: 0, y: 12 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{
+                      duration: 0.7,
+                      ease: [0.16, 1, 0.3, 1],
+                      delay: 0.04 * (i % 10),
+                    }}
+                    className="mb-2 break-inside-avoid md:mb-3 lg:mb-4"
+                  >
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={src}
+                      alt={`${project.title} — ${i + 1}`}
+                      loading={i < 4 ? "eager" : "lazy"}
+                      decoding="async"
+                      className="block w-full bg-paper-200 ring-1 ring-ink/5"
+                    />
+                  </motion.figure>
+                ))}
+              </div>
+            </div>
+          )}
 
           {/* footer hint */}
           <div className="mt-12 flex items-center justify-between text-[11px] uppercase tracking-[0.22em] text-ink/55 md:text-[12px]">
-            <span>{project.gallery.length} photos</span>
+            <span>
+              {project.gallery.length > 0
+                ? `${project.gallery.length} photos`
+                : "Visuals coming soon"}
+            </span>
             <span className="hidden md:inline">ESC to close</span>
           </div>
         </div>
