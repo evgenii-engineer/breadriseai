@@ -62,51 +62,59 @@ export function ReferencesView() {
         </span>
       </div>
 
-      {/* radial cluster anchored to the centre of the viewport */}
+      {/* radial cluster anchored to the centre of the viewport.
+          Positioning lives on the outer wrapper, animation on the
+          inner motion node — keep them separate so framer-motion
+          can't overwrite our pixel transform when it animates the
+          fade-in. */}
       <div className="absolute left-1/2 top-1/2 h-0 w-0">
         {cluster.map((p, i) => {
           const fn = fileNameFor(p.src);
           return (
-            <motion.button
+            <div
               key={p.key}
-              type="button"
-              initial={{ opacity: 0, scale: 0.85 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{
-                duration: 0.7,
-                ease: [0.16, 1, 0.3, 1],
-                delay: 0.025 * (i % 16),
-              }}
-              onClick={() => openProject(p.projectId)}
-              aria-label={`Open ${p.projectTitle}`}
-              className="group absolute left-0 top-0 flex flex-col items-center gap-1.5 rounded-md p-1.5 text-center transition-colors duration-200 hover:bg-ink/[0.05] focus:bg-ink/[0.08] focus:outline-none"
+              className="absolute left-0 top-0"
               style={{
                 width: p.widthPx,
                 transform: `translate(${p.tx}px, ${p.ty}px) translate(-50%, -50%)`,
               }}
             >
-              <div className="relative aspect-[3/4] w-full overflow-hidden bg-paper-200">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={p.src}
-                  alt={p.projectTitle}
-                  loading={i < 12 ? "eager" : "lazy"}
-                  decoding="async"
-                  className="h-full w-full object-cover"
-                />
-              </div>
-              <span
-                className="block w-full break-all text-[10px] leading-[1.2] text-ink/80 group-hover:text-ink"
-                style={{
-                  display: "-webkit-box",
-                  WebkitLineClamp: 2,
-                  WebkitBoxOrient: "vertical",
-                  overflow: "hidden",
+              <motion.button
+                type="button"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{
+                  duration: 0.7,
+                  ease: [0.16, 1, 0.3, 1],
+                  delay: 0.025 * (i % 16),
                 }}
+                onClick={() => openProject(p.projectId)}
+                aria-label={`Open ${p.projectTitle}`}
+                className="group flex w-full flex-col items-center gap-1.5 rounded-md p-1.5 text-center transition-colors duration-200 hover:bg-ink/[0.05] focus:bg-ink/[0.08] focus:outline-none"
               >
-                {fn}
-              </span>
-            </motion.button>
+                <div className="relative aspect-[3/4] w-full overflow-hidden bg-paper-200">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={p.src}
+                    alt={p.projectTitle}
+                    loading={i < 12 ? "eager" : "lazy"}
+                    decoding="async"
+                    className="h-full w-full object-cover"
+                  />
+                </div>
+                <span
+                  className="block w-full break-all text-[10px] leading-[1.2] text-ink/80 group-hover:text-ink"
+                  style={{
+                    display: "-webkit-box",
+                    WebkitLineClamp: 2,
+                    WebkitBoxOrient: "vertical",
+                    overflow: "hidden",
+                  }}
+                >
+                  {fn}
+                </span>
+              </motion.button>
+            </div>
           );
         })}
       </div>
